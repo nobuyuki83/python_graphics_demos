@@ -1,0 +1,12 @@
+del-msh==0.1.0
+del-srch==0.1.1
+glcontext==2.3.6
+moderngl==5.6.4
+multipledispatch==0.6.0
+numpy==1.23.4
+PyQt5==5.15.7
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.11.0
+pyrr==0.10.3
+six==1.16.0
+util-moderngl-qt==0.1.1
