@@ -16,23 +16,23 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
 
         newpath = Path('.') / 'asset' / 'HorseSwap.obj'
-        vtx_xyz, elem_vtx_index, elem_vtx_xyz = del_msh.load_wavefront_obj(str(newpath))
-        self.vtx_xyz = del_msh.centerize_scale_3d_points(vtx_xyz)
-        elem_vtx_xyz = elem_vtx_xyz.astype(numpy.uint64)
+        vtx2xyz, elem2idx, idx2vtx_xyz = del_msh.load_wavefront_obj(str(newpath))
+        self.vtx_xyz = del_msh.centerize_scale_3d_points(vtx2xyz)
+        idx2vtx_xyz = idx2vtx_xyz.astype(numpy.uint64)
 
-        E = del_msh.edges_of_triquad_mesh(elem_vtx_index, elem_vtx_xyz, self.vtx_xyz.shape[0])
-        self.tri_vtx = del_msh.triangles_from_triquad_mesh(elem_vtx_index, elem_vtx_xyz)
+        edge2vtx = del_msh.edges_of_triquad_mesh(elem2idx, idx2vtx_xyz, self.vtx_xyz.shape[0])
+        self.tri_vtx = del_msh.triangles_from_triquad_mesh(elem2idx, idx2vtx_xyz)
 
         drawer_triquadmesh3 = DrawerMesPos(
             V=self.vtx_xyz.astype(numpy.float32),
             element=[
-                ElementInfo(index=E.astype(numpy.uint32), color=(0, 0, 0), mode=moderngl.LINES),
+                ElementInfo(index=edge2vtx.astype(numpy.uint32), color=(0, 0, 0), mode=moderngl.LINES),
                 ElementInfo(index=self.tri_vtx.astype(numpy.uint32), color=(1, 1, 1), mode=moderngl.TRIANGLES)]
         )
 
-        V,F = del_msh.sphere_meshtri3(1., 32, 32)
-        self.drawer_sphere = DrawerMesPos(V, element=[
-            ElementInfo(index=F.astype(numpy.uint32), color=(1.,0.,0.), mode=moderngl.TRIANGLES)])
+        shere_vtx2xyz, sphere_tri2vtx = del_msh.sphere_meshtri3(1., 32, 32)
+        self.drawer_sphere = DrawerMesPos(shere_vtx2xyz, element=[
+            ElementInfo(index=sphere_tri2vtx.astype(numpy.uint32), color=(1.,0.,0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransformer(self.drawer_sphere)
         self.drawer_sphere.transform = pyrr.Matrix44.from_scale((0.05,0.05,0.05))
 
