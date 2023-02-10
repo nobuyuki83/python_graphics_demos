@@ -1,4 +1,4 @@
-del-msh==0.1.0
+del-msh==0.1.1
 del-srch==0.1.1
 glcontext==2.3.6
 moderngl==5.6.4
