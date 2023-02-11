@@ -33,7 +33,7 @@ class MyQtGLWidget(QtOpenGL.QGLWidget):
         self.ctx.enable(moderngl.DEPTH_TEST)
         mvp = pyrr.Matrix44.identity()
         self.texture.use(location=0)
-        self.drawer.paint_gl(mvp, 0)
+        self.drawer.paint_gl(mvp,0)
 
     def resizeGL(self, width, height):
         width = max(2, width)

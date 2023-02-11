@@ -10,6 +10,8 @@
 
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/05_thumbnail.png" width=320>
 
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/06_thumbnail.png" width=320>
+
 
 
 

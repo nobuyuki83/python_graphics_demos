@@ -10,6 +10,6 @@ pyrr==0.10.3
 six==1.16.0
 style==1.1.0
 update==0.0.1
-del-msh==0.1.1
+del-msh==0.1.2
 del-srch==0.1.1
-util-moderngl-qt==0.1.4
+util-moderngl-qt==0.1.5

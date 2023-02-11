@@ -6,14 +6,14 @@ from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
 import util_moderngl_qt.qtglwidget_viewer3
 import del_msh
 
-def draw_mesh(V,F):
-    E = del_msh.edges_of_uniform_mesh(F, V.shape[0])
+def draw_mesh(tri2vtx, vtx2xyz):
+    E = del_msh.edges_of_uniform_mesh(tri2vtx, vtx2xyz.shape[0])
 
     with QtWidgets.QApplication([]) as app:
         drawer = DrawerMesPos(
-            V=V.astype(numpy.float32),
+            V=vtx2xyz.astype(numpy.float32),
             element=[
-                ElementInfo(index=F.astype(numpy.uint32), color=(1, 0, 0), mode=moderngl.TRIANGLES),
+                ElementInfo(index=tri2vtx.astype(numpy.uint32), color=(1, 0, 0), mode=moderngl.TRIANGLES),
                 ElementInfo(index=E.astype(numpy.uint32), color=(0, 0, 0), mode=moderngl.LINES)]
         )
         win = util_moderngl_qt.qtglwidget_viewer3.QtGLWidget_Viewer3([drawer])

@@ -16,12 +16,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
 
         newpath = Path('.') / 'asset' / 'HorseSwap.obj'
-        vtx2xyz, elem2idx, idx2vtx_xyz = del_msh.load_wavefront_obj(str(newpath))
+        vtx2xyz, vtx2uv, elem2idx, idx2vtx_xyz, idx2vtx_uv = del_msh.load_wavefront_obj(str(newpath))
         self.vtx_xyz = del_msh.centerize_scale_3d_points(vtx2xyz)
         idx2vtx_xyz = idx2vtx_xyz.astype(numpy.uint64)
 
-        edge2vtx = del_msh.edges_of_triquad_mesh(elem2idx, idx2vtx_xyz, self.vtx_xyz.shape[0])
-        self.tri_vtx = del_msh.triangles_from_triquad_mesh(elem2idx, idx2vtx_xyz)
+        edge2vtx = del_msh.edges_of_polygon_mesh(elem2idx, idx2vtx_xyz, self.vtx_xyz.shape[0])
+        self.tri_vtx = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
 
         drawer_triquadmesh3 = DrawerMesPos(
             V=self.vtx_xyz.astype(numpy.float32),
@@ -30,7 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 ElementInfo(index=self.tri_vtx.astype(numpy.uint32), color=(1, 1, 1), mode=moderngl.TRIANGLES)]
         )
 
-        shere_vtx2xyz, sphere_tri2vtx = del_msh.sphere_meshtri3(1., 32, 32)
+        sphere_tri2vtx, shere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
         self.drawer_sphere = DrawerMesPos(shere_vtx2xyz, element=[
             ElementInfo(index=sphere_tri2vtx.astype(numpy.uint32), color=(1.,0.,0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransformer(self.drawer_sphere)
