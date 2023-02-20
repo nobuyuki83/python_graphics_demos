@@ -6,7 +6,7 @@ import numpy
 from pathlib import Path
 
 from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
-from util_moderngl_qt.drawer_transform import DrawerTransformer
+from util_moderngl_qt.drawer_transform import DrawerTransform
 import util_moderngl_qt.qtglwidget_viewer3
 import del_msh, del_srch
 
@@ -33,7 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
         sphere_tri2vtx, shere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
         self.drawer_sphere = DrawerMesPos(shere_vtx2xyz, element=[
             ElementInfo(index=sphere_tri2vtx.astype(numpy.uint32), color=(1.,0.,0.), mode=moderngl.TRIANGLES)])
-        self.drawer_sphere = DrawerTransformer(self.drawer_sphere)
+        self.drawer_sphere = DrawerTransform(self.drawer_sphere)
         self.drawer_sphere.transform = pyrr.Matrix44.from_scale((0.05,0.05,0.05))
 
         QtWidgets.QMainWindow.__init__(self)

@@ -1,16 +1,17 @@
 from pathlib import Path
 
-import moderngl
-from PyQt5 import QtWidgets, QtCore
-import numpy
-from pyrr import Matrix44
 import cvxopt
+import del_msh
+import del_srch
+import moderngl
+import numpy
+from PyQt5 import QtWidgets, QtCore
 from cvxopt import matrix
-
-from util_moderngl_qt.qtglwidget_viewer3 import QtGLWidget_Viewer3
+from pyrr import Matrix44
 from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
-from util_moderngl_qt.drawer_transform import DrawerTransformer
-import del_msh, del_srch
+from util_moderngl_qt.drawer_transform import DrawerTransform
+from util_moderngl_qt.qtglwidget_viewer3 import QtGLWidget_Viewer3
+
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -30,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow):
         F,V = del_msh.sphere_meshtri3(1., 32, 32)
         self.drawer_sphere = DrawerMesPos(V, element=[
             ElementInfo(index=F.astype(numpy.uint32), color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
-        self.drawer_sphere = DrawerTransformer(self.drawer_sphere)
+        self.drawer_sphere = DrawerTransform(self.drawer_sphere)
         self.drawer_sphere.is_visible = False
 
         self.shape_pos = numpy.array([vtx2xyz.flatten().copy()], dtype=numpy.float32)
