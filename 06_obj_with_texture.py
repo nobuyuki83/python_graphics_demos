@@ -3,15 +3,13 @@ import moderngl
 import numpy
 from PIL import Image
 from PyQt5 import QtWidgets
-
 import del_msh
 from util_moderngl_qt.drawer_meshpostex import DrawerMesPosTex, ElementInfo
 from util_moderngl_qt.qtglwidget_viewer3_texture import QtGLWidget_Viewer3_Texture
 
 if __name__ == '__main__':
-
-    newpath = Path('.') / 'asset' / 'Babi' / 'Babi.obj'
-    vtx2xyz, vtx2uv, elem2idx, idx2vtx_xyz, idx2vtx_uv = del_msh.load_wavefront_obj(str(newpath))
+    path_obj = Path('.') / 'asset' / 'Babi' / 'Babi.obj'
+    vtx2xyz, vtx2uv, elem2idx, idx2vtx_xyz, idx2vtx_uv = del_msh.load_wavefront_obj(str(path_obj))
     vtx2xyz[:, 0] -= (vtx2xyz[:, 0].max() + vtx2xyz[:, 0].min()) * 0.5
     vtx2xyz[:, 1] -= (vtx2xyz[:, 1].max() + vtx2xyz[:, 1].min()) * 0.5
     vtx2xyz[:, 2] -= (vtx2xyz[:, 2].max() + vtx2xyz[:, 2].min()) * 0.5

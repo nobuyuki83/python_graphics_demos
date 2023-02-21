@@ -1,12 +1,11 @@
 from pathlib import Path
 
-import cvxopt
+import blendshape
 import del_msh
 import del_srch
 import moderngl
 import numpy
 from PyQt5 import QtWidgets, QtCore
-from cvxopt import matrix
 from pyrr import Matrix44
 from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
 from util_moderngl_qt.drawer_transform import DrawerTransform
@@ -15,28 +14,28 @@ from util_moderngl_qt.qtglwidget_viewer3 import QtGLWidget_Viewer3
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, paths):
-        vtx2xyz, _, elem2idx, idx2vtx_xyz, _ = del_msh.load_wavefront_obj(paths[0])
+    def __init__(self, paths_obj):
+        vtx2xyz, _, elem2idx, idx2vtx_xyz, _ = del_msh.load_wavefront_obj(paths_obj[0])
         idx2vtx_xyz = idx2vtx_xyz.astype(numpy.uint64)
-        E = del_msh.edges_of_polygon_mesh(elem2idx, idx2vtx_xyz, vtx2xyz.shape[0])
-        self.tri_vtx = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
-        print(self.tri_vtx.shape, elem2idx.shape)
+        edge2vtx = del_msh.edges_of_polygon_mesh(elem2idx, idx2vtx_xyz, vtx2xyz.shape[0])
+        self.tri2vtx = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
+        print(self.tri2vtx.shape, elem2idx.shape)
         self.drawer_mesh = DrawerMesPos(
             V=vtx2xyz.astype(numpy.float32),
             element=[
-                ElementInfo(index=E.astype(numpy.uint32), color=(0, 0, 0), mode=moderngl.LINES),
-                ElementInfo(index=self.tri_vtx.astype(numpy.uint32), color=(1, 1, 1), mode=moderngl.TRIANGLES)]
+                ElementInfo(index=edge2vtx.astype(numpy.uint32), color=(0, 0, 0), mode=moderngl.LINES),
+                ElementInfo(index=self.tri2vtx.astype(numpy.uint32), color=(1, 1, 1), mode=moderngl.TRIANGLES)]
         )
 
-        F,V = del_msh.sphere_meshtri3(1., 32, 32)
-        self.drawer_sphere = DrawerMesPos(V, element=[
-            ElementInfo(index=F.astype(numpy.uint32), color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
+        sphere_tri2vtx, sphere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
+        self.drawer_sphere = DrawerMesPos(sphere_vtx2xyz, element=[
+            ElementInfo(index=sphere_tri2vtx.astype(numpy.uint32), color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransform(self.drawer_sphere)
         self.drawer_sphere.is_visible = False
 
         self.shape_pos = numpy.array([vtx2xyz.flatten().copy()], dtype=numpy.float32)
         self.weights = numpy.array([1.], dtype=numpy.float32)
-        for path in paths[1:]:
+        for path in paths_obj[1:]:
             self.add_shape(path)
 
         self.vtx_idx = -1
@@ -61,17 +60,14 @@ class MainWindow(QtWidgets.QMainWindow):
         if event.modifiers() & QtCore.Qt.KeyboardModifier.AltModifier:
             return
         vtx_xyz = self.weights.transpose().dot(self.shape_pos).reshape(-1, 3)
-        src, dir = self.glwidget.nav.picking_ray()
-        pos, tri_index = del_srch.first_intersection_ray_meshtri3(
+        src, direction = self.glwidget.nav.picking_ray()
+        self.vtx_idx = del_srch.pick_vertex_meshtri3(
             numpy.array(src.xyz).astype(numpy.float32),
-            numpy.array(dir.xyz).astype(numpy.float32),
-            vtx_xyz.astype(numpy.float32), self.tri_vtx)
+            numpy.array(direction.xyz).astype(numpy.float32),
+            vtx_xyz.astype(numpy.float32), self.tri2vtx)
+        print(self.vtx_idx)
         self.drawer_sphere.is_visible = False
-        self.vtx_idx = -1
-        if tri_index != -1:
-            print("hit", tri_index)
-            self.vtx_idx = self.tri_vtx[tri_index][0]
-            assert self.vtx_idx < self.tri_vtx.shape[0]
+        if self.vtx_idx != -1:
             pos0 = vtx_xyz[self.vtx_idx].copy()
             self.drawer_sphere.is_visible = True
             rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
@@ -88,23 +84,7 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = self.glwidget.nav.projection_matrix() * self.glwidget.nav.modelview_matrix()
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
-        B = []
-        nshape = self.shape_pos.shape[0]
-        for ishape in range(nshape):
-            pos0 = self.shape_pos[ishape].reshape(-1, 3)[self.vtx_idx].copy()
-            pos0 = mvp.dot(numpy.append(pos0, 1.0))[0:2]
-            B.append(pos0)
-        B = numpy.vstack(B).transpose()
-        P = B.transpose().dot(B) + numpy.eye(nshape) * 0.001
-        q = -B.transpose().dot(trg)
-        A = numpy.ones((1, nshape)).astype(numpy.double)
-        b = numpy.array([1.]).reshape(1, 1)
-        G = numpy.vstack([numpy.eye(nshape), -numpy.eye(nshape)]).astype(numpy.double)
-        h = numpy.vstack([numpy.ones((nshape, 1)), numpy.zeros((nshape, 1))]).astype(numpy.double)
-        sol = cvxopt.solvers.qp(P=matrix(P), q=matrix(q),
-                                A=matrix(A), b=matrix(b),
-                                G=matrix(G), h=matrix(h))
-        self.weights = numpy.array(sol['x'], dtype=numpy.float32)
+        self.weights = blendshape.direct_manipulation(self.shape_pos, {self.vtx_idx: [mvp,trg]})
         vtx_xyz = self.weights.transpose().dot(self.shape_pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx_xyz)
         pos0 = vtx_xyz[self.vtx_idx].copy()
@@ -115,7 +95,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.glwidget.updateGL()
 
 
-if __name__ == "__main__":
+def main():
     path_dir = Path('.') / 'asset'
     paths = [str(path_dir / 'suzanne0.obj'),
              str(path_dir / 'suzanne1.obj'),
@@ -125,3 +105,7 @@ if __name__ == "__main__":
         win = MainWindow(paths)
         win.show()
         app.exec()
+
+
+if __name__ == "__main__":
+    main()

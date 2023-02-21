@@ -1,16 +1,15 @@
 from pathlib import Path
-
-import cvxopt
 import del_msh
 import del_srch
 import moderngl
 import numpy
+import blendshape
 from PyQt5 import QtWidgets, QtCore
-from cvxopt import matrix
 from pyrr import Matrix44
 from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
 from util_moderngl_qt.qtglwidget_viewer3 import QtGLWidget_Viewer3
+
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -28,9 +27,9 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         # sphere
-        F, V = del_msh.sphere_meshtri3(1., 32, 32)
-        self.drawer_sphere = DrawerMesPos(V, element=[
-            ElementInfo(index=F.astype(numpy.uint32), color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
+        sphere_tri2vtx, sphere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
+        self.drawer_sphere = DrawerMesPos(sphere_vtx2xyz, element=[
+            ElementInfo(index=sphere_tri2vtx.astype(numpy.uint32), color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
         self.drawer_sphere.is_visible = False
 
@@ -63,17 +62,14 @@ class MainWindow(QtWidgets.QMainWindow):
         if event.modifiers() & QtCore.Qt.KeyboardModifier.AltModifier:
             return
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3)  # current shape
-        src, dir = self.glwidget.nav.picking_ray()
-        pos, tri_index = del_srch.first_intersection_ray_meshtri3(
+        src, direction = self.glwidget.nav.picking_ray()
+        self.vtx_pick = del_srch.pick_vertex_meshtri3(
             numpy.array(src.xyz).astype(numpy.float32),
-            numpy.array(dir.xyz).astype(numpy.float32),
+            numpy.array(direction.xyz).astype(numpy.float32),
             vtx2xyz.astype(numpy.float32), self.tri2vtx)
-        self.drawer_sphere.is_visible = False
-        self.vtx_pick = -1
-        if tri_index == -1:
+        print(self.vtx_pick)
+        if self.vtx_pick == -1:
             return
-        print("hit", tri_index)
-        self.vtx_pick = self.tri2vtx[tri_index][0]
         assert self.vtx_pick < self.tri2vtx.shape[0]
         mvp = self.glwidget.nav.projection_matrix() * self.glwidget.nav.modelview_matrix()
         mvp = numpy.array(mvp).transpose()
@@ -100,29 +96,7 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
-        B = []
-        num_shape = self.shape2pos.shape[0]
-        for vtx_marker in self.markers.keys():
-            for idx_shape in range(num_shape):
-                pos0 = self.shape2pos[idx_shape].reshape(-1, 3)[vtx_marker].copy()
-                pos0 = self.markers[vtx_marker][0].dot(numpy.append(pos0, 1.0))[0:2]
-                B.append(pos0)
-        B = numpy.vstack(B).transpose().reshape(-1, num_shape)
-        T = []
-        for vtx_marker in self.markers.keys():
-            T.append(self.markers[vtx_marker][1])
-        T = numpy.array(T).transpose().flatten()
-        print(T.shape, B.shape)
-        P = B.transpose().dot(B) + numpy.eye(num_shape) * 0.001
-        q = -B.transpose().dot(T)
-        A = numpy.ones((1, num_shape)).astype(numpy.double)
-        b = numpy.array([1.]).reshape(1, 1)
-        G = numpy.vstack([numpy.eye(num_shape), -numpy.eye(num_shape)]).astype(numpy.double)
-        h = numpy.vstack([numpy.ones((num_shape, 1)), numpy.zeros((num_shape, 1))]).astype(numpy.double)
-        sol = cvxopt.solvers.qp(P=matrix(P), q=matrix(q),
-                                A=matrix(A), b=matrix(b),
-                                G=matrix(G), h=matrix(h))
-        self.weights = numpy.array(sol['x'], dtype=numpy.float32)
+        self.weights = blendshape.direct_manipulation(self.shape2pos, self.markers)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
@@ -134,7 +108,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.glwidget.updateGL()
 
 
-if __name__ == "__main__":
+def main():
     path_dir = Path('.') / 'asset'
     paths = [str(path_dir / 'suzanne0.obj'),
              str(path_dir / 'suzanne1.obj'),
@@ -146,3 +120,7 @@ if __name__ == "__main__":
         win = MainWindow(paths)
         win.show()
         app.exec()
+
+
+if __name__ == "__main__":
+    main()
