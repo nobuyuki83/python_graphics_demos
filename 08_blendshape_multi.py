@@ -48,6 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.glwidget = QtGLWidget_Viewer3([self.drawer_mesh, self.drawer_sphere])
         self.glwidget.mousePressCallBack.append(self.mouse_press_callback)
         self.glwidget.mouseMoveCallBack.append(self.mouse_move_callback)
+        self.glwidget.mouseDoubleClickCallBack.append(self.mouse_doubleclick_callback)
         self.setCentralWidget(self.glwidget)
 
     def add_shape(self, path1):
@@ -96,6 +97,28 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
+        self.weights = blendshape.direct_manipulation(self.shape2pos, self.markers)
+        vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
+        self.drawer_mesh.update_position(vtx2xyz)
+        rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
+        self.drawer_sphere.list_transform = []
+        for key_markers in self.markers.keys():
+            scale = Matrix44.from_scale((rad, rad, rad))
+            translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
+            self.drawer_sphere.list_transform.append(translate * scale)
+        self.glwidget.updateGL()
+
+    def mouse_doubleclick_callback(self, event):
+        vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3)  # current shape
+        src, direction = self.glwidget.nav.picking_ray()
+        vtx_pick = del_srch.pick_vertex_meshtri3(
+            numpy.array(src.xyz).astype(numpy.float32),
+            numpy.array(direction.xyz).astype(numpy.float32),
+            vtx2xyz.astype(numpy.float32), self.tri2vtx)
+        if vtx_pick not in self.markers:
+            return
+        self.markers.pop(vtx_pick)
+        self.vtx_pick = -1
         self.weights = blendshape.direct_manipulation(self.shape2pos, self.markers)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
