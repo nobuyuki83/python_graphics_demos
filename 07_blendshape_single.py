@@ -21,15 +21,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tri2vtx = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
         print(self.tri2vtx.shape, elem2idx.shape)
         self.drawer_mesh = DrawerMesPos(
-            V=vtx2xyz.astype(numpy.float32),
-            element=[
-                ElementInfo(index=edge2vtx.astype(numpy.uint32), color=(0, 0, 0), mode=moderngl.LINES),
-                ElementInfo(index=self.tri2vtx.astype(numpy.uint32), color=(1, 1, 1), mode=moderngl.TRIANGLES)]
+            vtx2xyz=vtx2xyz,
+            list_elem2vtx=[
+                ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
+                ElementInfo(index=self.tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)]
         )
 
         sphere_tri2vtx, sphere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
-        self.drawer_sphere = DrawerMesPos(sphere_vtx2xyz, element=[
-            ElementInfo(index=sphere_tri2vtx.astype(numpy.uint32), color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
+        self.drawer_sphere = DrawerMesPos(vtx2xyz=sphere_vtx2xyz, list_elem2vtx=[
+            ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransform(self.drawer_sphere)
         self.drawer_sphere.is_visible = False
 

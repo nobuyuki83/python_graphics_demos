@@ -13,4 +13,4 @@ pyrr==0.10.3
 six==1.16.0
 style==1.1.0
 update==0.0.1
-util-moderngl-qt==0.1.7
+util-moderngl-qt==0.1.8

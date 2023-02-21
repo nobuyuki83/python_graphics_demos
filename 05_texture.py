@@ -6,6 +6,7 @@ from PIL import Image
 
 from util_moderngl_qt.drawer_meshpostex import DrawerMesPosTex, ElementInfo
 
+
 class MyQtGLWidget(QtOpenGL.QGLWidget):
 
     def __init__(self, drawer, img: numpy.ndarray, parent=None):
@@ -33,12 +34,13 @@ class MyQtGLWidget(QtOpenGL.QGLWidget):
         self.ctx.enable(moderngl.DEPTH_TEST)
         mvp = pyrr.Matrix44.identity()
         self.texture.use(location=0)
-        self.drawer.paint_gl(mvp,0)
+        self.drawer.paint_gl(mvp, 0)
 
     def resizeGL(self, width, height):
         width = max(2, width)
         height = max(2, height)
         self.ctx.viewport = (0, 0, width, height)
+
 
 if __name__ == '__main__':
     vtx2xyz = numpy.array([
@@ -55,11 +57,11 @@ if __name__ == '__main__':
         [1., 1.],
         [0., 1.]], dtype=numpy.float32)
     edge2vtx = numpy.array([
-        [0,1],
-        [1,2],
-        [2,3],
-        [3,0],
-        [0,2]], dtype=numpy.uint32)
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [3, 0],
+        [0, 2]], dtype=numpy.uint32)
 
     img = Image.open("asset/tesla.png")
     img = numpy.asarray(img)

@@ -5,6 +5,7 @@ import numpy
 
 from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
 
+
 class MyQtGLWidget(QtOpenGL.QGLWidget):
 
     def __init__(self, drawer, parent=None):
@@ -18,6 +19,7 @@ class MyQtGLWidget(QtOpenGL.QGLWidget):
         self.resize(640, 480)
         self.setWindowTitle('Mesh Viewer')
         self.drawer = drawer
+        self.ctx = None
 
     def initializeGL(self):
         self.ctx = moderngl.create_context()
@@ -34,6 +36,7 @@ class MyQtGLWidget(QtOpenGL.QGLWidget):
         height = max(2, height)
         self.ctx.viewport = (0, 0, width, height)
 
+
 if __name__ == '__main__':
     V = numpy.array([
         [-0.5, -0.5, 0],
@@ -42,16 +45,16 @@ if __name__ == '__main__':
     F = numpy.array([
         [0, 1, 2]], dtype=numpy.uint32)
     E = numpy.array([
-        [0,1],
-        [1,2],
-        [2,0]], dtype=numpy.uint32)
+        [0, 1],
+        [1, 2],
+        [2, 0]], dtype=numpy.uint32)
 
     with QtWidgets.QApplication([]) as app:
         drawer = DrawerMesPos(
-            V=V,
-            element=[
-                ElementInfo(index=F, color=(1,0,0), mode=moderngl.TRIANGLES),
-                ElementInfo(index=E, color=(0,0,0), mode=moderngl.LINES)]
+            vtx2xyz=V,
+            list_elem2vtx=[
+                ElementInfo(index=F, color=(1, 0, 0), mode=moderngl.TRIANGLES),
+                ElementInfo(index=E, color=(0, 0, 0), mode=moderngl.LINES)]
         )
         win = MyQtGLWidget(drawer)
         win.show()

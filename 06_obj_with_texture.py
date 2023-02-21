@@ -26,7 +26,7 @@ if __name__ == '__main__':
     with QtWidgets.QApplication([]) as app:
         drawer = DrawerMesPosTex(
             list_elem2vtx=[
-                ElementInfo(index=tri2uni.astype(numpy.uint32), color=None, mode=moderngl.TRIANGLES)],
+                ElementInfo(index=tri2uni, color=None, mode=moderngl.TRIANGLES)],
             vtx2xyz=uni2xyz,
             vtx2uv=uni2uv
         )

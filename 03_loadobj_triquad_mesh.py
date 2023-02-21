@@ -23,10 +23,10 @@ if __name__ == "__main__":
 
     with QtWidgets.QApplication([]) as app:
         drawer = DrawerMesPos(
-            V=vtx2xyz.astype(numpy.float32),
-            element=[
-                ElementInfo(index=edge2vtx.astype(numpy.uint32), color=(0, 0, 0), mode=moderngl.LINES),
-                ElementInfo(index=tri2vtx.astype(numpy.uint32), color=(1, 1, 1), mode=moderngl.TRIANGLES)]
+            vtx2xyz=vtx2xyz,
+            list_elem2vtx=[
+                ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
+                ElementInfo(index=tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)]
         )
         win = util_moderngl_qt.qtglwidget_viewer3.QtGLWidget_Viewer3([drawer])
         win.show()
