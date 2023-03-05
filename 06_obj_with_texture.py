@@ -30,6 +30,6 @@ if __name__ == '__main__':
             vtx2xyz=uni2xyz,
             vtx2uv=uni2uv
         )
-        win = QtGLWidget_Viewer3_Texture(drawer, img)
+        win = QtGLWidget_Viewer3_Texture([drawer], img)
         win.show()
         app.exec()
