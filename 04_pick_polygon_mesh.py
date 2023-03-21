@@ -1,14 +1,14 @@
-import moderngl
-import pyrr
-from PyQt5 import QtWidgets, QtCore
-import numpy
-
 from pathlib import Path
 
+import del_msh
+import del_srch
+import moderngl
+import numpy
+import pyrr
+import util_moderngl_qt.qtglwidget_viewer3
+from PyQt5 import QtWidgets, QtCore
 from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
 from util_moderngl_qt.drawer_transform import DrawerTransform
-import util_moderngl_qt.qtglwidget_viewer3
-import del_msh, del_srch
 
 
 class MainWindow(QtWidgets.QMainWindow):

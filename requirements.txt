@@ -1,5 +1,5 @@
 cvxopt==1.3.0
-del-msh==0.1.6
+del-msh==0.1.7
 del-srch==0.1.3
 glcontext==2.3.6
 moderngl==5.7.4
@@ -13,4 +13,4 @@ pyrr==0.10.3
 six==1.16.0
 style==1.1.0
 update==0.0.1
-util-moderngl-qt==0.1.14
+util-moderngl-qt==0.1.15

@@ -10,7 +10,6 @@ import del_msh
 import del_srch
 
 
-
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
@@ -64,7 +63,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_visualization(True)
         self.tri2dist = del_msh.topological_distance_on_uniform_mesh(tri_index, self.elsuel)
 
-
     def mouse_move_callback(self, event: QtGui.QMouseEvent) -> None:
         if event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
             return
@@ -82,7 +80,6 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.update_visualization(False)
 
-
     def mouse_release_callback(self, event: QtGui.QMouseEvent) -> None:
         if event.modifiers() & QtCore.Qt.KeyboardModifier.ControlModifier:
             self.tri2flag[self.tri2dist <= self.cur_dist] = 0
@@ -90,7 +87,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.tri2flag[self.tri2dist <= self.cur_dist] = 1
         self.cur_dist = -1
         self.update_visualization(True)
-
 
     def update_visualization(self, is_unselect: bool):
         num_tri = self.tri2vtx.shape[0]
@@ -111,6 +107,7 @@ class MainWindow(QtWidgets.QMainWindow):
             tri2node2rgb[self.tri2dist <= self.cur_dist, :, 2] = 1.0
         self.glwidget.list_drawer[0].update_color(tri2node2rgb)
         self.glwidget.update()
+
 
 def main():
     with QtWidgets.QApplication([]) as app:
