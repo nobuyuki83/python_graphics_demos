@@ -26,7 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         tri2vtx2xyz = del_msh.unidex_vertex_attribute_for_triangle_mesh(self.tri2vtx, self.vtx2xyz)
         drawer_face = DrawerMeshUnindex(
-            tri2vtx2xyz=tri2vtx2xyz.astype(numpy.float32),
+            tri2node2xyz=tri2vtx2xyz.astype(numpy.float32),
         )
 
         self.cur_dist = -1

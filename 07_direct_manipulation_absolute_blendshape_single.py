@@ -84,7 +84,7 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = self.glwidget.nav.projection_matrix() * self.glwidget.nav.modelview_matrix()
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
-        self.weights = blendshape.direct_manipulation(self.shape_pos, {self.vtx_idx: [mvp,trg]})
+        self.weights = blendshape.direct_manipulation(self.shape_pos, {self.vtx_idx: [mvp, trg]})
         vtx_xyz = self.weights.transpose().dot(self.shape_pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx_xyz)
         pos0 = vtx_xyz[self.vtx_idx].copy()

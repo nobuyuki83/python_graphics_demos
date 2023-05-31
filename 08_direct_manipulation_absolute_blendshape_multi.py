@@ -3,7 +3,7 @@ import del_msh
 import del_srch
 import moderngl
 import numpy
-import blendshape
+import blendshape_absolute
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
 from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
@@ -97,7 +97,7 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
-        self.weights = blendshape.direct_manipulation(self.shape2pos, self.markers)
+        self.weights = blendshape_absolute.direct_manipulation(self.shape2pos, self.markers)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
