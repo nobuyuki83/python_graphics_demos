@@ -21,15 +21,15 @@
 ## [06_obj_with_texture,py](06_obj_with_texture.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/06_thumbnail.png" width=320>
 
-## [07_direct_manipulation_absolute_blendshape_single.py](07_direct_manipulation_absolute_blendshape_single.py)
+## [07_direct_manipulation_delta_blendshape.py](07_direct_manipulation_delta_blendshape.py)
 
-direct manipulation of blendshape with single control point
+direct manipulation of delta blendshape
 
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/07_thumbnail.png" width=320>
 
-## [07_direct_manipulation_absolute_blendshape_multi.py](07_direct_manipulation_absolute_blendshape_multi.py)
+## [08_direct_manipulation_absolute_blendshape.py](08_direct_manipulation_absolute_blendshape.py)
 
-direct manipulation of blendshape with multiple control points
+direct manipulation of absolute blendshape
 
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/08_thumbnail.png" width=320>
 
