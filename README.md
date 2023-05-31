@@ -46,5 +46,5 @@ user interface for selecting/unselecting triangles
 
 ## [11_mesh_colormap.py](11_mesh_colormap.py)
 
-<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/11_mesh_colormap.png" width=320>
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/11_thumbnail.png" width=320>
 
