@@ -3,7 +3,7 @@ import del_msh
 import del_srch
 import moderngl
 import numpy
-import blendshape_absolute
+import blendshape_delta
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
 from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
@@ -18,7 +18,6 @@ class MainWindow(QtWidgets.QMainWindow):
         idx2vtx_xyz = idx2vtx_xyz.astype(numpy.uint64)
         edge2vtx = del_msh.edges_of_polygon_mesh(elem2idx, idx2vtx_xyz, vtx2xyz.shape[0])
         self.tri2vtx = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
-        print(self.tri2vtx.shape, elem2idx.shape)
         self.drawer_mesh = DrawerMesPos(
             vtx2xyz=vtx2xyz,
             list_elem2vtx=[
@@ -27,6 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         # sphere
+        self.rad_sphere = 0.05
         sphere_tri2vtx, sphere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
         self.drawer_sphere = DrawerMesPos(sphere_vtx2xyz, list_elem2vtx=[
             ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
@@ -45,7 +45,9 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self)
         self.resize(640, 480)
         self.setWindowTitle('Mesh Viewer')
-        self.glwidget = QtGLWidget_Viewer3([self.drawer_mesh, self.drawer_sphere])
+        self.glwidget = QtGLWidget_Viewer3(
+            [self.drawer_mesh, self.drawer_sphere])
+        self.glwidget.nav.view_height = 1.
         self.glwidget.mousePressCallBack.append(self.mouse_press_callback)
         self.glwidget.mouseMoveCallBack.append(self.mouse_move_callback)
         self.glwidget.mouseDoubleClickCallBack.append(self.mouse_doubleclick_callback)
@@ -68,7 +70,6 @@ class MainWindow(QtWidgets.QMainWindow):
             numpy.array(src.xyz).astype(numpy.float32),
             numpy.array(direction.xyz).astype(numpy.float32),
             vtx2xyz.astype(numpy.float32), self.tri2vtx)
-        print(self.vtx_pick)
         if self.vtx_pick == -1:
             return
         assert self.vtx_pick < self.tri2vtx.shape[0]
@@ -76,10 +77,9 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
-        rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
         self.drawer_sphere.list_transform = []
         for key_markers in self.markers.keys():
-            scale = Matrix44.from_scale((rad, rad, rad))
+            scale = Matrix44.from_scale((self.rad_sphere, self.rad_sphere, self.rad_sphere))
             translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
             self.drawer_sphere.list_transform.append(translate * scale)
         print(self.markers)
@@ -97,13 +97,14 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
-        self.weights = blendshape_absolute.direct_manipulation(self.shape2pos, self.markers)
+        dweights = blendshape_delta.direct_manipulation(self.shape2pos, self.markers)
+        print(dweights)
+        self.weights = numpy.append(1 - numpy.sum(dweights), dweights).astype(numpy.float32)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
-        rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
         self.drawer_sphere.list_transform = []
         for key_markers in self.markers.keys():
-            scale = Matrix44.from_scale((rad, rad, rad))
+            scale = Matrix44.from_scale((self.rad_sphere, self.rad_sphere, self.rad_sphere))
             translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
             self.drawer_sphere.list_transform.append(translate * scale)
         self.glwidget.updateGL()
@@ -115,11 +116,14 @@ class MainWindow(QtWidgets.QMainWindow):
             numpy.array(src.xyz).astype(numpy.float32),
             numpy.array(direction.xyz).astype(numpy.float32),
             vtx2xyz.astype(numpy.float32), self.tri2vtx)
-        if vtx_pick not in self.markers:
-            return
-        self.markers.pop(vtx_pick)
+        for vtx in self.markers.copy():
+            len = numpy.linalg.norm(vtx2xyz[vtx_pick]-vtx2xyz[vtx])
+            print(len, self.rad_sphere, vtx, vtx_pick)
+            if len < self.rad_sphere:
+                self.markers.pop(vtx)
         self.vtx_pick = -1
-        self.weights = blendshape.direct_manipulation(self.shape2pos, self.markers)
+        dweights = blendshape_delta.direct_manipulation(self.shape2pos, self.markers)
+        self.weights = numpy.append(1 - numpy.sum(dweights), dweights).astype(numpy.float32)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
