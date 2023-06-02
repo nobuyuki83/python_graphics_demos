@@ -73,3 +73,5 @@ docs/_build/
 
 Cargo.lock
 .github
+
+output/

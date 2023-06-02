@@ -48,3 +48,6 @@ user interface for selecting/unselecting triangles
 
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/11_thumbnail.png" width=320>
 
+## [12_offline_rendering.py](12_offline_rendering.py)
+
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/12_thumbnail.png" width=320>
