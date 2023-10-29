@@ -2,7 +2,7 @@ import moderngl
 from PyQt5 import QtWidgets
 import numpy
 
-from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
+from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
 import util_moderngl_qt.qtglwidget_viewer3
 import del_msh
 
@@ -11,7 +11,7 @@ def draw_mesh(tri2vtx, vtx2xyz):
     edge2vtx = del_msh.edges_of_uniform_mesh(tri2vtx, vtx2xyz.shape[0])
 
     with QtWidgets.QApplication([]) as app:
-        drawer = DrawerMesPos(
+        drawer = DrawerMesh(
             vtx2xyz=vtx2xyz.astype(numpy.float32),
             list_elem2vtx=[
                 ElementInfo(index=tri2vtx, color=(1, 0, 0), mode=moderngl.TRIANGLES),

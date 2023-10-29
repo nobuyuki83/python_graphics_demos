@@ -9,7 +9,10 @@ from util_moderngl_qt.qtglwidget_viewer3_texture import QtGLWidget_Viewer3_Textu
 
 if __name__ == '__main__':
     path_obj = Path('.') / 'asset' / 'Babi' / 'Babi.obj'
-    vtx2xyz, vtx2uv, elem2idx, idx2vtx_xyz, idx2vtx_uv = del_msh.load_wavefront_obj(str(path_obj))
+    vtx2xyz, vtx2uv, vtx2nrm, \
+        elem2idx, idx2vtx_xyz, idx2vtx_uv, idx2vtx_nrm, \
+        elem2group, group2name,\
+        elem2mtl, mtl2name, mtl_file_name =  del_msh.load_wavefront_obj(str(path_obj))
     vtx2xyz[:, 0] -= (vtx2xyz[:, 0].max() + vtx2xyz[:, 0].min()) * 0.5
     vtx2xyz[:, 1] -= (vtx2xyz[:, 1].max() + vtx2xyz[:, 1].min()) * 0.5
     vtx2xyz[:, 2] -= (vtx2xyz[:, 2].max() + vtx2xyz[:, 2].min()) * 0.5
@@ -18,7 +21,13 @@ if __name__ == '__main__':
     tri2vtx_xyz = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
     tri2vtx_uv = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_uv)
 
-    tri2uni, uni2xyz, uni2uv = del_msh.unify_triangle_indices_of_xyz_and_uv(tri2vtx_xyz, vtx2xyz, tri2vtx_uv, vtx2uv)
+    tri2uni, uni2vtxxyz, uni2vtxuv = del_msh.unify_two_indices_of_triangle_mesh(tri2vtx_xyz, tri2vtx_uv)
+
+    uni2xyz = numpy.ndarray((uni2vtxxyz.shape[0],3),vtx2xyz.dtype)
+    uni2xyz[:,:] = vtx2xyz[uni2vtxxyz[:],:]
+
+    uni2uv = numpy.ndarray((uni2vtxuv.shape[0],2),vtx2uv.dtype)
+    uni2uv[:,:] = vtx2uv[uni2vtxuv[:],:]
 
     img = Image.open("asset/Babi/Tex.png")
     img = numpy.asarray(img)

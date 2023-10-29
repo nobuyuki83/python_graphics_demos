@@ -3,7 +3,7 @@ import moderngl
 from PyQt5 import QtWidgets, QtCore, QtGui
 import numpy
 
-from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
+from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
 from util_moderngl_qt.drawer_meshunindex import DrawerMeshUnindex
 import util_moderngl_qt.qtglwidget_viewer3
 import del_msh
@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.vtx2xyz = del_msh.centerize_scale_3d_points(vtx2xyz)
 
         edge2vtx = del_msh.edges_of_uniform_mesh(self.tri2vtx, self.vtx2xyz.shape[0])
-        drawer_edge = DrawerMesPos(
+        drawer_edge = DrawerMesh(
             vtx2xyz=self.vtx2xyz.astype(numpy.float32),
             list_elem2vtx=[
                 ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES)]
@@ -26,7 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         tri2vtx2xyz = del_msh.unidex_vertex_attribute_for_triangle_mesh(self.tri2vtx, self.vtx2xyz)
         drawer_face = DrawerMeshUnindex(
-            tri2node2xyz=tri2vtx2xyz.astype(numpy.float32),
+            elem2node2xyz=tri2vtx2xyz.astype(numpy.float32),
         )
 
         self.cur_dist = -1

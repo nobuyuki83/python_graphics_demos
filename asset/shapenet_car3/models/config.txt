@@ -1,0 +1,13 @@
+validity 3
+wheel_rad 0.352571
+wheel_out 0.999916
+wheel_in 0.634956
+wheelf_y 0.33942
+wheelf_z -1.21677
+wheelr_y 0.331213
+wheelr_z 1.06194
+car_type 2
+car_transx -0.005041
+car_transy 0.166448
+car_transz -0.0100175
+car_scale 4.54722

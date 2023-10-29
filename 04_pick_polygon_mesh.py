@@ -7,7 +7,7 @@ import numpy
 import pyrr
 import util_moderngl_qt.qtglwidget_viewer3
 from PyQt5 import QtWidgets, QtCore
-from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
+from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
 from util_moderngl_qt.drawer_transform import DrawerTransform
 
 
@@ -16,14 +16,17 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
 
         newpath = Path('.') / 'asset' / 'HorseSwap.obj'
-        vtx2xyz, vtx2uv, elem2idx, idx2vtx_xyz, idx2vtx_uv = del_msh.load_wavefront_obj(str(newpath))
+        vtx2xyz, vtx2uv, vtx2nrm, \
+            elem2idx, idx2vtx_xyz, idx2vtx_uv, idx2vtx_nrm, \
+            elem2group, group2name, \
+            elem2mtl, mtl2name, mtl_file_name = del_msh.load_wavefront_obj(str(newpath))
         self.vtx2xyz = del_msh.centerize_scale_3d_points(vtx2xyz)
         idx2vtx_xyz = idx2vtx_xyz.astype(numpy.uint64)
 
         edge2vtx = del_msh.edges_of_polygon_mesh(elem2idx, idx2vtx_xyz, self.vtx2xyz.shape[0])
         self.tri2vtx = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
 
-        drawer_triquadmesh3 = DrawerMesPos(
+        drawer_triquadmesh3 = DrawerMesh(
             vtx2xyz=self.vtx2xyz.astype(numpy.float32),
             list_elem2vtx=[
                 ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
@@ -31,7 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         sphere_tri2vtx, shere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
-        self.drawer_sphere = DrawerMesPos(vtx2xyz=shere_vtx2xyz, list_elem2vtx=[
+        self.drawer_sphere = DrawerMesh(vtx2xyz=shere_vtx2xyz, list_elem2vtx=[
             ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransform(self.drawer_sphere)
         self.drawer_sphere.transform = pyrr.Matrix44.from_scale((0.05, 0.05, 0.05))

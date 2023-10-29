@@ -6,7 +6,7 @@ import numpy
 import blendshape_delta
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
-from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
+from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
 from util_moderngl_qt.qtglwidget_viewer3 import QtGLWidget_Viewer3
 
@@ -14,11 +14,13 @@ from util_moderngl_qt.qtglwidget_viewer3 import QtGLWidget_Viewer3
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, paths):
-        vtx2xyz, _, elem2idx, idx2vtx_xyz, _ = del_msh.load_wavefront_obj(paths[0])
+        vtx2xyz, _, _, \
+            elem2idx, idx2vtx_xyz, _, _, \
+            _, _, _, _, _ = del_msh.load_wavefront_obj(paths[0])
         idx2vtx_xyz = idx2vtx_xyz.astype(numpy.uint64)
         edge2vtx = del_msh.edges_of_polygon_mesh(elem2idx, idx2vtx_xyz, vtx2xyz.shape[0])
         self.tri2vtx = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
-        self.drawer_mesh = DrawerMesPos(
+        self.drawer_mesh = DrawerMesh(
             vtx2xyz=vtx2xyz,
             list_elem2vtx=[
                 ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
@@ -28,7 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # sphere
         self.rad_sphere = 0.05
         sphere_tri2vtx, sphere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
-        self.drawer_sphere = DrawerMesPos(sphere_vtx2xyz, list_elem2vtx=[
+        self.drawer_sphere = DrawerMesh(sphere_vtx2xyz, list_elem2vtx=[
             ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
         self.drawer_sphere.is_visible = False
@@ -54,7 +56,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.glwidget)
 
     def add_shape(self, path1):
-        vtx2xyz1, _, elem2idx, idx2vtx_xyz, _ = del_msh.load_wavefront_obj(path1)
+        vtx2xyz1, _, _, \
+            elem2idx, idx2vtx_xyz, _, _, \
+            _, _, _, _, _ = del_msh.load_wavefront_obj(path1)
         vtx2xyz1 = vtx2xyz1.flatten().astype(numpy.float32)
         self.shape2pos = numpy.vstack([self.shape2pos, vtx2xyz1])
         self.weights = numpy.append(self.weights, 0).astype(numpy.float32)
@@ -117,7 +121,7 @@ class MainWindow(QtWidgets.QMainWindow):
             numpy.array(direction.xyz).astype(numpy.float32),
             vtx2xyz.astype(numpy.float32), self.tri2vtx)
         for vtx in self.markers.copy():
-            len = numpy.linalg.norm(vtx2xyz[vtx_pick]-vtx2xyz[vtx])
+            len = numpy.linalg.norm(vtx2xyz[vtx_pick] - vtx2xyz[vtx])
             print(len, self.rad_sphere, vtx, vtx_pick)
             if len < self.rad_sphere:
                 self.markers.pop(vtx)

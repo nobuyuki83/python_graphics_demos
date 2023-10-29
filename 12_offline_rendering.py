@@ -5,7 +5,7 @@ import del_msh
 import moderngl
 import pyrr
 from PyQt5 import QtWidgets, QtCore, QtGui
-from util_moderngl_qt.drawer_meshpos import DrawerMesPos, ElementInfo
+from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
 import util_moderngl_qt.qtglwidget_viewer3
 import moderngl
 from PIL import Image
@@ -16,7 +16,7 @@ def main():
     tri2vtx, vtx2xyz = del_msh.load_wavefront_obj_as_triangle_mesh(str(path_file))
     edge2vtx = del_msh.edges_of_uniform_mesh(tri2vtx, vtx2xyz.shape[0])
 
-    drawer = DrawerMesPos(
+    drawer = DrawerMesh(
         vtx2xyz=vtx2xyz,
         list_elem2vtx=[
             ElementInfo(index=tri2vtx, color=(1., 1., 1.), mode=moderngl.TRIANGLES),
