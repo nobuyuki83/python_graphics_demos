@@ -4,7 +4,7 @@ from PyQt5 import QtOpenGL, QtWidgets, QtCore
 import numpy
 from PIL import Image
 
-from util_moderngl_qt.drawer_meshpostex import DrawerMesPosTex, ElementInfo
+from util_moderngl_qt.drawer_mesh_texture import DrawerMesh_Texture, ElementInfo
 
 
 class MyQtGLWidget(QtOpenGL.QGLWidget):
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     img = numpy.asarray(img)
 
     with QtWidgets.QApplication([]) as app:
-        drawer = DrawerMesPosTex(
+        drawer = DrawerMesh_Texture(
             list_elem2vtx=[
                 ElementInfo(index=tri2vtx, color=None, mode=moderngl.TRIANGLES),
                 ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES)],

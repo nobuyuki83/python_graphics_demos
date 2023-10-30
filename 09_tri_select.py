@@ -15,7 +15,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
         self.tri2vtx, vtx2xyz = del_msh.load_wavefront_obj_as_triangle_mesh(str(path_file))
-        self.vtx2xyz = del_msh.centerize_scale_3d_points(vtx2xyz)
+        self.vtx2xyz = del_msh.centerize_scale_points(vtx2xyz)
 
         edge2vtx = del_msh.edges_of_uniform_mesh(self.tri2vtx, self.vtx2xyz.shape[0])
         drawer_edge = DrawerMesh(

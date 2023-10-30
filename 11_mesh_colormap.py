@@ -14,7 +14,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
         self.tri2vtx, self.vtx2xyz = del_msh.load_wavefront_obj_as_triangle_mesh(str(path_file))
-        self.vtx2xyz = del_msh.centerize_scale_3d_points(self.vtx2xyz)
+        self.vtx2xyz = del_msh.centerize_scale_points(self.vtx2xyz)
         self.vtx2val = (numpy.sin( self.vtx2xyz[:, 0] * 10.) + 1.) * 0.5
         print(self.vtx2val.dtype, self.vtx2val.shape)
 
