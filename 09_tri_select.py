@@ -3,9 +3,7 @@ import moderngl
 from PyQt5 import QtWidgets, QtCore, QtGui
 import numpy
 
-from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
-from util_moderngl_qt.drawer_meshunindex import DrawerMeshUnindex
-import util_moderngl_qt.qtglwidget_viewer3
+from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerMeshUnindex
 import del_msh
 import del_srch
 
@@ -18,14 +16,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.vtx2xyz = del_msh.centerize_scale_points(vtx2xyz)
 
         edge2vtx = del_msh.edges_of_uniform_mesh(self.tri2vtx, self.vtx2xyz.shape[0])
-        drawer_edge = DrawerMesh(
+        drawer_edge = DrawerMesh.Drawer(
             vtx2xyz=self.vtx2xyz.astype(numpy.float32),
             list_elem2vtx=[
-                ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES)]
+                DrawerMesh.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES)]
         )
 
         tri2vtx2xyz = del_msh.unidex_vertex_attribute_for_triangle_mesh(self.tri2vtx, self.vtx2xyz)
-        drawer_face = DrawerMeshUnindex(
+        drawer_face = DrawerMeshUnindex.Drawer(
             elem2node2xyz=tri2vtx2xyz.astype(numpy.float32),
         )
 
@@ -37,7 +35,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.resize(640, 480)
         self.setWindowTitle('Mesh Viewer')
-        self.glwidget = util_moderngl_qt.qtglwidget_viewer3.QtGLWidget_Viewer3(
+        self.glwidget = QGLWidgetViewer3.QtGLWidget_Viewer3(
             [drawer_face, drawer_edge])
         self.glwidget.mousePressCallBack.append(self.mouse_press_callback)
         self.glwidget.mouseMoveCallBack.append(self.mouse_move_callback)

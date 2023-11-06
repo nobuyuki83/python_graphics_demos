@@ -4,30 +4,9 @@ import numpy
 
 from pathlib import Path
 
-from util_moderngl_qt.drawer_mesh_normal import DrawerMeshNormal, ElementInfo
-import util_moderngl_qt.qtglwidget_viewer3
+from util_moderngl_qt import DrawerMeshNormal, QGLWidgetViewer3
 import del_msh
 from del_msh import WavefrontObj
-
-
-def read_material(path):
-    with open(str(path)) as f:
-        dict_mtl = {}
-        cur_mtl = {}
-        cur_name = ""
-        for line in f:
-            if line.startswith('#'):
-                continue
-            words = line.split()
-            if len(words) == 2 and words[0] == 'newmtl':
-                cur_name = words[1]
-                cur_mtl = {}
-            if len(words) == 0 and cur_name != "":
-                dict_mtl[cur_name] = cur_mtl
-            if len(words) == 4 and words[0] == 'Kd':
-                cur_mtl['Kd'] = (float(words[1]), float(words[2]), float(words[3]))
-    return dict_mtl
-
 
 if __name__ == "__main__":
 
@@ -45,7 +24,7 @@ if __name__ == "__main__":
 
     del_msh.centerize_scale_points(uni2xyz, scale=1.8)
 
-    dict_mtl = read_material(path_dir / obj.mtl_file_name)
+    dict_mtl = WavefrontObj.read_material(str(path_dir / obj.mtl_file_name))
     dict_mtl['_default'] = {'Kd': [0., 0., 0.]}
 
     with QtWidgets.QApplication([]) as app:
@@ -59,12 +38,12 @@ if __name__ == "__main__":
                 continue
             tri_part2vtx = del_msh.triangles_from_polygon_mesh(elem_part2idx_part, idx_part2uni)
             color = dict_mtl[mtl_name]['Kd']
-            list_elem2vtx.append(ElementInfo(index=tri_part2vtx, color=color, mode=moderngl.TRIANGLES))
-        drawer = DrawerMeshNormal(
+            list_elem2vtx.append(DrawerMeshNormal.ElementInfo(index=tri_part2vtx, color=color, mode=moderngl.TRIANGLES))
+        drawer = DrawerMeshNormal.Drawer(
             vtx2xyz=uni2xyz,
             vtx2nrm=uni2nrm,
             list_elem2vtx=list_elem2vtx
         )
-        win = util_moderngl_qt.qtglwidget_viewer3.QtGLWidget_Viewer3([drawer])
+        win = QGLWidgetViewer3.QtGLWidget_Viewer3([drawer])
         win.show()
         app.exec()

@@ -1,6 +1,5 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
-from util_moderngl_qt.drawer_meshunindex import DrawerMeshUnindex
-import util_moderngl_qt.qtglwidget_viewer3
+from util_moderngl_qt import DrawerMeshUnindex, QGLWidgetViewer3
 import del_srch
 import numpy
 
@@ -13,8 +12,8 @@ def main():
     print(edges.shape)
 
     with QtWidgets.QApplication([]) as app:
-        drawer = DrawerMeshUnindex(elem2node2xyz=edges)
-        win = util_moderngl_qt.qtglwidget_viewer3.QtGLWidget_Viewer3([drawer])
+        drawer = DrawerMeshUnindex.Drawer(elem2node2xyz=edges)
+        win = QGLWidgetViewer3.QtGLWidget_Viewer3([drawer])
         win.show()
         app.exec()
 

@@ -6,9 +6,8 @@ import numpy
 import blendshape_absolute
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
-from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
+from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
-from util_moderngl_qt.qtglwidget_viewer3 import QtGLWidget_Viewer3
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -21,17 +20,17 @@ class MainWindow(QtWidgets.QMainWindow):
         edge2vtx = del_msh.edges_of_polygon_mesh(elem2idx, idx2vtx_xyz, vtx2xyz.shape[0])
         self.tri2vtx = del_msh.triangles_from_polygon_mesh(elem2idx, idx2vtx_xyz)
         print(self.tri2vtx.shape, elem2idx.shape)
-        self.drawer_mesh = DrawerMesh(
+        self.drawer_mesh = DrawerMesh.Drawer(
             vtx2xyz=vtx2xyz,
             list_elem2vtx=[
-                ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
-                ElementInfo(index=self.tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)]
+                DrawerMesh.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
+                DrawerMesh.ElementInfo(index=self.tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)]
         )
 
         # sphere
         sphere_tri2vtx, sphere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
-        self.drawer_sphere = DrawerMesh(sphere_vtx2xyz, list_elem2vtx=[
-            ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
+        self.drawer_sphere = DrawerMesh.Drawer(sphere_vtx2xyz, list_elem2vtx=[
+            DrawerMesh.ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
         self.drawer_sphere.is_visible = False
 
@@ -47,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self)
         self.resize(640, 480)
         self.setWindowTitle('Mesh Viewer')
-        self.glwidget = QtGLWidget_Viewer3([self.drawer_mesh, self.drawer_sphere])
+        self.glwidget = QGLWidgetViewer3.QtGLWidget_Viewer3([self.drawer_mesh, self.drawer_sphere])
         self.glwidget.mousePressCallBack.append(self.mouse_press_callback)
         self.glwidget.mouseMoveCallBack.append(self.mouse_move_callback)
         self.glwidget.mouseDoubleClickCallBack.append(self.mouse_doubleclick_callback)

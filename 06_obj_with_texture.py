@@ -5,8 +5,7 @@ from PIL import Image
 from PyQt5 import QtWidgets
 import del_msh
 from del_msh import WavefrontObj
-from util_moderngl_qt.drawer_mesh_texture import DrawerMesh_Texture, ElementInfo
-from util_moderngl_qt.qtglwidget_viewer3_texture import QtGLWidget_Viewer3_Texture
+from util_moderngl_qt import DrawerMeshTexture, QGLWidgetViewer3Texture
 
 if __name__ == '__main__':
     path_obj = Path('.') / 'asset' / 'Babi' / 'Babi.obj'
@@ -28,12 +27,12 @@ if __name__ == '__main__':
     img = numpy.asarray(img)
 
     with QtWidgets.QApplication([]) as app:
-        drawer = DrawerMesh_Texture(
+        drawer = DrawerMeshTexture.Drawer(
             list_elem2vtx=[
-                ElementInfo(index=tri2uni, color=None, mode=moderngl.TRIANGLES)],
+                DrawerMeshTexture.ElementInfo(index=tri2uni, color=None, mode=moderngl.TRIANGLES)],
             vtx2xyz=uni2xyz,
             vtx2uv=uni2uv
         )
-        win = QtGLWidget_Viewer3_Texture([drawer], img)
+        win = QGLWidgetViewer3Texture.QtGLWidget_Viewer3_Texture([drawer], img)
         win.show()
         app.exec()

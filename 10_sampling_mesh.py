@@ -4,10 +4,9 @@ import del_msh
 import random
 import moderngl
 import pyrr
-from PyQt5 import QtWidgets, QtCore, QtGui
-from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
+from PyQt5 import QtWidgets
+from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
-import util_moderngl_qt.qtglwidget_viewer3
 
 
 def position_3d_on_triangle_in_mesh(
@@ -54,17 +53,17 @@ class MainWindow(QtWidgets.QMainWindow):
         samples = sample_mesh_uniform(self.tri2vtx, self.vtx2xyz)
 
         edge2vtx = del_msh.edges_of_uniform_mesh(self.tri2vtx, self.vtx2xyz.shape[0])
-        drawer_edge = DrawerMesh(
+        drawer_edge = DrawerMesh.Drawer(
             vtx2xyz=self.vtx2xyz.astype(numpy.float32),
             list_elem2vtx=[
-                ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
-                ElementInfo(index=self.tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)
+                DrawerMesh.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
+                DrawerMesh.ElementInfo(index=self.tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)
             ]
         )
 
         sphere_tri2vtx, shere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
-        self.drawer_sphere = DrawerMesh(vtx2xyz=shere_vtx2xyz, list_elem2vtx=[
-            ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
+        self.drawer_sphere = DrawerMesh.Drawer(vtx2xyz=shere_vtx2xyz, list_elem2vtx=[
+            DrawerMesh.ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
         for sample in samples:
             pos_i = position_3d_on_triangle_in_mesh(*sample, self.tri2vtx, self.vtx2xyz)
@@ -75,7 +74,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.resize(640, 480)
         self.setWindowTitle('Mesh Viewer')
-        self.glwidget = util_moderngl_qt.qtglwidget_viewer3.QtGLWidget_Viewer3(
+        self.glwidget = QGLWidgetViewer3.QtGLWidget_Viewer3(
             [drawer_edge, self.drawer_sphere])
         self.setCentralWidget(self.glwidget)
 

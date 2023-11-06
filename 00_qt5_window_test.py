@@ -3,11 +3,13 @@ import pyrr
 from PyQt5 import QtOpenGL, QtWidgets, QtCore
 import numpy
 
-from util_moderngl_qt.drawer_meshposcolor import DrawerMesPosColor
+from util_moderngl_qt import DrawerMeshVtxColor
+
 
 class MyQtGLWidget(QtOpenGL.QGLWidget):
 
     def __init__(self, drawer, parent=None):
+        self.ctx = None
         self.parent = parent
         fmt = QtOpenGL.QGLFormat()
         fmt.setVersion(3, 3)
@@ -48,7 +50,7 @@ if __name__ == '__main__':
         [0, 1, 2]], dtype=numpy.uint32)
 
     with QtWidgets.QApplication([]) as app:
-        drawer = DrawerMesPosColor(V=V.tobytes(), C=C.tobytes(), F=F.tobytes())
+        drawer = DrawerMeshVtxColor.Drawer(V=V.tobytes(), C=C.tobytes(), F=F.tobytes())
         win = MyQtGLWidget(drawer)
         win.show()
         app.exec()

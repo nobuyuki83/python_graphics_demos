@@ -3,7 +3,7 @@ import pyrr
 from PyQt5 import QtOpenGL, QtWidgets, QtCore
 import numpy
 
-from util_moderngl_qt.drawer_mesh import DrawerMesh, ElementInfo
+from util_moderngl_qt import DrawerMesh
 
 
 class MyQtGLWidget(QtOpenGL.QGLWidget):
@@ -50,11 +50,11 @@ if __name__ == '__main__':
         [2, 0]], dtype=numpy.uint32)
 
     with QtWidgets.QApplication([]) as app:
-        drawer = DrawerMesh(
+        drawer = DrawerMesh.Drawer(
             vtx2xyz=V,
             list_elem2vtx=[
-                ElementInfo(index=F, color=(1, 0, 0), mode=moderngl.TRIANGLES),
-                ElementInfo(index=E, color=(0, 0, 0), mode=moderngl.LINES)]
+                DrawerMesh.ElementInfo(index=F, color=(1, 0, 0), mode=moderngl.TRIANGLES),
+                DrawerMesh.ElementInfo(index=E, color=(0, 0, 0), mode=moderngl.LINES)]
         )
         win = MyQtGLWidget(drawer)
         win.show()
