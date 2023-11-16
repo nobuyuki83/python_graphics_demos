@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 import numpy
 
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerMeshUnindex
-import del_msh
+from del_msh import TriMesh
 import del_srch
 
 
@@ -12,17 +12,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
-        self.tri2vtx, vtx2xyz = del_msh.load_wavefront_obj_as_triangle_mesh(str(path_file))
-        self.vtx2xyz = del_msh.centerize_scale_points(vtx2xyz)
+        self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(path_file, is_centerize=True, normalized_size=1.8)
 
-        edge2vtx = del_msh.edges_of_uniform_mesh(self.tri2vtx, self.vtx2xyz.shape[0])
+        edge2vtx = TriMesh.edges(self.tri2vtx, self.vtx2xyz.shape[0])
         drawer_edge = DrawerMesh.Drawer(
-            vtx2xyz=self.vtx2xyz.astype(numpy.float32),
+            vtx2xyz=self.vtx2xyz,
             list_elem2vtx=[
                 DrawerMesh.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES)]
         )
 
-        tri2vtx2xyz = del_msh.unidex_vertex_attribute_for_triangle_mesh(self.tri2vtx, self.vtx2xyz)
+        tri2vtx2xyz = TriMesh.unindexing(self.tri2vtx, self.vtx2xyz)
         drawer_face = DrawerMeshUnindex.Drawer(
             elem2node2xyz=tri2vtx2xyz.astype(numpy.float32),
         )
@@ -30,7 +29,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.cur_dist = -1
         self.tri2dist = numpy.zeros(self.tri2vtx.shape[0], dtype=numpy.uint64)
         self.tri2flag = numpy.zeros(self.tri2vtx.shape[0], dtype=numpy.int32)
-        self.elsuel = del_msh.elsuel_uniform_mesh_polygon(self.tri2vtx, self.vtx2xyz.shape[0])
+        self.tri2tri = TriMesh.triangle_adjacency(self.tri2vtx, self.vtx2xyz.shape[0])
 
         super().__init__()
         self.resize(640, 480)
@@ -59,7 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.tri2flag[tri_index] = 1
         self.cur_dist = -1
         self.update_visualization(True)
-        self.tri2dist = del_msh.topological_distance_on_uniform_mesh(tri_index, self.elsuel)
+        self.tri2dist = TriMesh.topological_distance_of_tris(tri_index, self.tri2tri)
 
     def mouse_move_callback(self, event: QtGui.QMouseEvent) -> None:
         if event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:

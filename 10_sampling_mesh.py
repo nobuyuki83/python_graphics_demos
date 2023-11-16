@@ -1,39 +1,27 @@
 import numpy
 import pathlib
-import del_msh
 import random
 import moderngl
 import pyrr
 from PyQt5 import QtWidgets
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
-
-
-def position_3d_on_triangle_in_mesh(
-        idx_tri: int, r0: float, r1: float,
-        tri2vtx, vtx2xyz):
-    i0 = tri2vtx[idx_tri][0]
-    i1 = tri2vtx[idx_tri][1]
-    i2 = tri2vtx[idx_tri][2]
-    p0 = vtx2xyz[i0]
-    p1 = vtx2xyz[i1]
-    p2 = vtx2xyz[i2]
-    return r0 * p0 + r1 * p1 + (1.-r0-r1) * p2
+from del_msh import TriMesh
 
 
 def sample_mesh_uniform(tri2vtx, vtx2xyz):
-    tri2area = del_msh.areas_of_triangles_of_mesh(tri2vtx, vtx2xyz)
+    tri2area = TriMesh.areas(tri2vtx, vtx2xyz)
     cumsum_area = numpy.cumsum(numpy.append(0., tri2area)).astype(numpy.float32)
 
     rad = 0.1
 
     samples = []
     for i in range(1000):
-        smpl_i = del_msh.sample_uniform(cumsum_area, random.random(), random.random())
-        pos_i = position_3d_on_triangle_in_mesh(*smpl_i, tri2vtx, vtx2xyz)
+        smpl_i = TriMesh.sample(cumsum_area, random.random(), random.random())
+        pos_i = TriMesh.position(tri2vtx, vtx2xyz, *smpl_i)
         is_near = False
         for smpl_j in samples:
-            pos_j = position_3d_on_triangle_in_mesh(*smpl_j, tri2vtx, vtx2xyz)
+            pos_j = TriMesh.position(tri2vtx, vtx2xyz, *smpl_j)
             distance = numpy.linalg.norm(pos_i - pos_j)
             if distance < rad:
                 is_near = True
@@ -48,11 +36,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
-        self.tri2vtx, vtx2xyz = del_msh.load_wavefront_obj_as_triangle_mesh(str(path_file))
-        self.vtx2xyz = del_msh.centerize_scale_points(vtx2xyz)
+        self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(path_file, is_centerize=True, normalized_size=1.)
         samples = sample_mesh_uniform(self.tri2vtx, self.vtx2xyz)
 
-        edge2vtx = del_msh.edges_of_uniform_mesh(self.tri2vtx, self.vtx2xyz.shape[0])
+        edge2vtx = TriMesh.edges(self.tri2vtx, self.vtx2xyz.shape[0])
         drawer_edge = DrawerMesh.Drawer(
             vtx2xyz=self.vtx2xyz.astype(numpy.float32),
             list_elem2vtx=[
@@ -61,15 +48,15 @@ class MainWindow(QtWidgets.QMainWindow):
             ]
         )
 
-        sphere_tri2vtx, shere_vtx2xyz = del_msh.sphere_meshtri3(1., 32, 32)
+        sphere_tri2vtx, shere_vtx2xyz = TriMesh.sphere()
         self.drawer_sphere = DrawerMesh.Drawer(vtx2xyz=shere_vtx2xyz, list_elem2vtx=[
             DrawerMesh.ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
         for sample in samples:
-            pos_i = position_3d_on_triangle_in_mesh(*sample, self.tri2vtx, self.vtx2xyz)
+            pos_i = TriMesh.position(self.tri2vtx, self.vtx2xyz, *sample)
             scale = pyrr.Matrix44.from_scale((0.01, 0.01, 0.01))
             translation = pyrr.Matrix44.from_translation(pos_i)
-            self.drawer_sphere.list_transform.append(translation*scale)
+            self.drawer_sphere.list_transform.append(translation * scale)
 
         super().__init__()
         self.resize(640, 480)

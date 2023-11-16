@@ -3,11 +3,10 @@ from PyQt5 import QtWidgets
 import numpy
 
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
-import del_msh
-
+from del_msh import TriMesh
 
 def draw_mesh(tri2vtx, vtx2xyz):
-    edge2vtx = del_msh.edges_of_uniform_mesh(tri2vtx, vtx2xyz.shape[0])
+    edge2vtx = TriMesh.edges(tri2vtx=tri2vtx, num_vtx=vtx2xyz.shape[0])
 
     with QtWidgets.QApplication([]) as app:
         drawer = DrawerMesh.Drawer(
@@ -22,7 +21,7 @@ def draw_mesh(tri2vtx, vtx2xyz):
 
 
 if __name__ == "__main__":
-    draw_mesh(*del_msh.torus_meshtri3(0.6, 0.3, 32, 32))
-    draw_mesh(*del_msh.capsule_meshtri3(0.1, 0.6, 32, 32, 32))
-    draw_mesh(*del_msh.cylinder_closed_end_meshtri3(0.1, 0.8, 32, 32))
-    draw_mesh(*del_msh.sphere_meshtri3(1., 32, 32))
+    draw_mesh(*TriMesh.torus(major_radius=0.4, minor_radius=0.2))
+    draw_mesh(*TriMesh.capsule(radius=0.1, height=1.2, ndiv_longtitude=8))
+    draw_mesh(*TriMesh.cylinder(radius=0.3, height=1.2))
+    draw_mesh(*TriMesh.sphere(radius=1.0))

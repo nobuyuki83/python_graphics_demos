@@ -1,11 +1,9 @@
 import numpy
 import pathlib
-import del_msh
-import random
 import moderngl
-import pyrr
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets
 from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3
+import del_msh
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -14,7 +12,7 @@ class MainWindow(QtWidgets.QMainWindow):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
         self.tri2vtx, self.vtx2xyz = del_msh.load_wavefront_obj_as_triangle_mesh(str(path_file))
         self.vtx2xyz = del_msh.centerize_scale_points(self.vtx2xyz)
-        self.vtx2val = (numpy.sin( self.vtx2xyz[:, 0] * 10.) + 1.) * 0.5
+        self.vtx2val = (numpy.sin(self.vtx2xyz[:, 0] * 10.) + 1.) * 0.5
         print(self.vtx2val.dtype, self.vtx2val.shape)
 
         edge2vtx = del_msh.edges_of_uniform_mesh(self.tri2vtx, self.vtx2xyz.shape[0])

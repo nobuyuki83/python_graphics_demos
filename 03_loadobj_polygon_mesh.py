@@ -1,22 +1,17 @@
+import typing
+from pathlib import Path
 import moderngl
 from PyQt5 import QtWidgets
-import numpy
-
-from pathlib import Path
-
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
-
-import del_msh
 from del_msh import WavefrontObj
 
 if __name__ == "__main__":
     newpath = Path('.') / 'asset' / 'HorseSwap.obj'
     # newpath = Path('.') / 'asset' / 'Babi' / 'Babi.obj'
 
-    obj = WavefrontObj.load(str(newpath))
-    del_msh.centerize_scale_points(obj.vtxxyz2xyz, scale=1.8)
-    edge2vtx = del_msh.edges_of_polygon_mesh(obj.elem2idx, obj.idx2vtxxyz, obj.vtxxyz2xyz.shape[0])
-    tri2vtx = del_msh.triangles_from_polygon_mesh(obj.elem2idx, obj.idx2vtxxyz)
+    obj = WavefrontObj.load(str(newpath), is_centerize=True, normalized_size=1.8)
+    edge2vtx = obj.edges()
+    tri2vtx = obj.tris()
 
     with QtWidgets.QApplication([]) as app:
         drawer = DrawerMesh.Drawer(
