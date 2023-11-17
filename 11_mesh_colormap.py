@@ -3,19 +3,18 @@ import pathlib
 import moderngl
 from PyQt5 import QtWidgets
 from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3
-import del_msh
+from del_msh import TriMesh
 
 
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
-        self.tri2vtx, self.vtx2xyz = del_msh.load_wavefront_obj_as_triangle_mesh(str(path_file))
-        self.vtx2xyz = del_msh.centerize_scale_points(self.vtx2xyz)
+        self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.0)
         self.vtx2val = (numpy.sin(self.vtx2xyz[:, 0] * 10.) + 1.) * 0.5
         print(self.vtx2val.dtype, self.vtx2val.shape)
 
-        edge2vtx = del_msh.edges_of_uniform_mesh(self.tri2vtx, self.vtx2xyz.shape[0])
+        edge2vtx = TriMesh.edges(self.tri2vtx, self.vtx2xyz.shape[0])
         drawer_edge = DrawerMeshColorMap.Drawer(
             vtx2xyz=self.vtx2xyz.astype(numpy.float32),
             list_elem2vtx=[

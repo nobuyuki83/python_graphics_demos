@@ -1,13 +1,13 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets
 from util_moderngl_qt import DrawerMeshUnindex, QGLWidgetViewer3
-import del_srch
 import numpy
+from del_msh import MyClass
 
 def main():
     coord = numpy.random.rand(100, 2).astype(numpy.float32)
     coord[:, :] *= 1.8
     coord[:, :] -= 0.9
-    kdtree2 = del_srch.MyClass(coord)
+    kdtree2 = MyClass(coord)
     edges = kdtree2.edges()
     print(edges.shape)
 

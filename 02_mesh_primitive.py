@@ -5,6 +5,7 @@ import numpy
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from del_msh import TriMesh
 
+
 def draw_mesh(tri2vtx, vtx2xyz):
     edge2vtx = TriMesh.edges(tri2vtx=tri2vtx, num_vtx=vtx2xyz.shape[0])
 

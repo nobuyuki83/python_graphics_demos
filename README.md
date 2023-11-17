@@ -39,7 +39,6 @@ user interface for selecting/unselecting triangles
 
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/09_thumbnail.png" width=320>
 
-
 ## [10_sampling_mesh.py](10_sampling_mesh.py)
 
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/10_thumbnail.png" width=320>
@@ -51,3 +50,23 @@ user interface for selecting/unselecting triangles
 ## [12_offline_rendering.py](12_offline_rendering.py)
 
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/12_thumbnail.png" width=320>
+
+## [13_kdtree2.py](13_kdtree2.py)
+
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/13_thumbnail.png" width=320>
+
+## [14_loadobj_material.py](14_loadobj_material.py)
+
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/14_thumbnail.png" width=320>
+
+## [15_loadobj_material_normal.py](15_loadobj_material_normal.py)
+
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/15_thumbnail.png" width=320>
+
+## [16_extension_edgeloop.py](16_extension_edgeloop.py)
+
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/16_thumbnail.png" width=320>
+
+## [17_extension_trimesh.py](17_extension_trimesh.py.py)
+
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/17_thumbnail.png" width=320>

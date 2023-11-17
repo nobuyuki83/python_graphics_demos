@@ -1,6 +1,6 @@
 import moderngl
 import pyrr
-from PyQt5 import QtOpenGL, QtWidgets, QtCore
+from PyQt5 import QtOpenGL, QtWidgets
 import numpy
 
 from util_moderngl_qt import DrawerMesh

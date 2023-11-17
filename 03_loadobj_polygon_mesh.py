@@ -6,8 +6,8 @@ from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from del_msh import WavefrontObj
 
 if __name__ == "__main__":
-    newpath = Path('.') / 'asset' / 'HorseSwap.obj'
-    # newpath = Path('.') / 'asset' / 'Babi' / 'Babi.obj'
+    # newpath = Path('.') / 'asset' / 'HorseSwap.obj'
+    newpath = Path('.') / 'asset' / 'Babi' / 'Babi.obj'
 
     obj = WavefrontObj.load(str(newpath), is_centerize=True, normalized_size=1.8)
     edge2vtx = obj.edges()

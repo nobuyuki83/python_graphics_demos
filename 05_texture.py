@@ -3,7 +3,6 @@ import pyrr
 from PyQt5 import QtOpenGL, QtWidgets
 import numpy
 from PIL import Image
-
 from util_moderngl_qt import DrawerMeshTexture
 
 

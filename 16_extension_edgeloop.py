@@ -5,14 +5,14 @@ from PyQt5 import QtWidgets
 import numpy
 
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
-import del_msh
-
+from del_msh.del_msh import extend_polyedge
+from del_msh import TriMesh
 
 if __name__ == "__main__":
     n = 200
     rad = 0.8
     amp = 0.3
-    height = 0.3;
+    height = 0.3
     lpedge2lpvtx = numpy.ndarray((n, 2), dtype=numpy.uint32)
     lpvtx2xyz = numpy.ndarray((n, 3), dtype=numpy.float64)
     for i in range(0, n):
@@ -27,7 +27,7 @@ if __name__ == "__main__":
         lpvtx2xyz[i, 1] = rad1 * math.sin(theta)
         lpvtx2xyz[i, 2] = z
 
-    tri2vtx, vtx2xyz = del_msh.extend_polyedge(lpvtx2xyz, 0.02, 10)
+    tri2vtx, vtx2xyz = extend_polyedge(lpvtx2xyz, 0.02, 10)
 
     with QtWidgets.QApplication([]) as app:
         '''
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 DrawerMesh.ElementInfo(index=lpedge2lpvtx, color=(0, 0, 0), mode=moderngl.LINES)]
         )
         '''
-        edge2vtx = del_msh.edges_of_uniform_mesh(tri2vtx, vtx2xyz.shape[0])
+        edge2vtx = TriMesh.edges(tri2vtx, vtx2xyz.shape[0])
         drawer_trimesh = DrawerMesh.Drawer(
             vtx2xyz=vtx2xyz,
             list_elem2vtx=[

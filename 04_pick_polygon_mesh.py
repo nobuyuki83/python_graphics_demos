@@ -5,7 +5,6 @@ import pyrr
 from PyQt5 import QtWidgets, QtCore
 
 from del_msh import WavefrontObj, TriMesh
-import del_srch
 from util_moderngl_qt import QGLWidgetViewer3, DrawerMesh
 from util_moderngl_qt.drawer_transform import DrawerTransform
 
@@ -46,7 +45,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if event.modifiers() & QtCore.Qt.KeyboardModifier.AltModifier:
             return
         src, direction = self.glwidget.nav.picking_ray()
-        pos, tri_index = del_srch.first_intersection_ray_meshtri3(
+        pos, tri_index = TriMesh.first_intersection_ray(
             numpy.array(src.xyz).astype(numpy.float32), numpy.array(direction.xyz).astype(numpy.float32),
             self.vtx2xyz, self.tri2vtx)
         self.drawer_sphere.is_visible = False

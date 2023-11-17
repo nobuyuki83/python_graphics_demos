@@ -5,14 +5,13 @@ import numpy
 
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerMeshUnindex
 from del_msh import TriMesh
-import del_srch
 
 
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
-        self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(path_file, is_centerize=True, normalized_size=1.8)
+        self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.8)
 
         edge2vtx = TriMesh.edges(self.tri2vtx, self.vtx2xyz.shape[0])
         drawer_edge = DrawerMesh.Drawer(
@@ -47,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if event.modifiers() & QtCore.Qt.KeyboardModifier.AltModifier:
             return
         src, direction = self.glwidget.nav.picking_ray()
-        pos, tri_index = del_srch.first_intersection_ray_meshtri3(
+        pos, tri_index = TriMesh.first_intersection_ray(
             numpy.array(src.xyz).astype(numpy.float32), numpy.array(direction.xyz).astype(numpy.float32),
             self.vtx2xyz, self.tri2vtx)
         if tri_index < 0:
@@ -66,7 +65,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if event.modifiers() & QtCore.Qt.KeyboardModifier.AltModifier:
             return
         src, direction = self.glwidget.nav.picking_ray()
-        pos, tri_index = del_srch.first_intersection_ray_meshtri3(
+        pos, tri_index = TriMesh.first_intersection_ray(
             numpy.array(src.xyz).astype(numpy.float32), numpy.array(direction.xyz).astype(numpy.float32),
             self.vtx2xyz, self.tri2vtx)
         if tri_index == -1:

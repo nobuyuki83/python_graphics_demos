@@ -4,6 +4,7 @@ import random
 import moderngl
 import pyrr
 from PyQt5 import QtWidgets
+
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
 from del_msh import TriMesh
@@ -36,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
-        self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(path_file, is_centerize=True, normalized_size=1.)
+        self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.)
         samples = sample_mesh_uniform(self.tri2vtx, self.vtx2xyz)
 
         edge2vtx = TriMesh.edges(self.tri2vtx, self.vtx2xyz.shape[0])
