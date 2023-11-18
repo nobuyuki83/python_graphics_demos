@@ -40,9 +40,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.)
         samples = sample_mesh_uniform(self.tri2vtx, self.vtx2xyz)
 
-        edge2vtx = TriMesh.edges(self.tri2vtx, self.vtx2xyz.shape[0])
+        edge2vtx = TriMesh.edge2vtx(self.tri2vtx, self.vtx2xyz.shape[0])
         drawer_edge = DrawerMesh.Drawer(
-            vtx2xyz=self.vtx2xyz.astype(numpy.float32),
+            vtx2xyz=self.vtx2xyz,
             list_elem2vtx=[
                 DrawerMesh.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
                 DrawerMesh.ElementInfo(index=self.tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)

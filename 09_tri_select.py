@@ -13,7 +13,7 @@ class MainWindow(QtWidgets.QMainWindow):
         path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
         self.tri2vtx, self.vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.8)
 
-        edge2vtx = TriMesh.edges(self.tri2vtx, self.vtx2xyz.shape[0])
+        edge2vtx = TriMesh.edge2vtx(self.tri2vtx, self.vtx2xyz.shape[0])
         drawer_edge = DrawerMesh.Drawer(
             vtx2xyz=self.vtx2xyz,
             list_elem2vtx=[

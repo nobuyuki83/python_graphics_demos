@@ -10,7 +10,7 @@ from del_msh import TriMesh
 def main():
     path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
     tri2vtx, vtx2xyz = TriMesh.load_wavefront_obj(str(path_file))
-    edge2vtx = TriMesh.edges(tri2vtx, vtx2xyz.shape[0])
+    edge2vtx = TriMesh.edge2vtx(tri2vtx, vtx2xyz.shape[0])
 
     drawer = DrawerMesh.Drawer(
         vtx2xyz=vtx2xyz,

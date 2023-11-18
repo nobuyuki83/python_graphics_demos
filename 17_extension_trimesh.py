@@ -12,7 +12,7 @@ if __name__ == "__main__":
     vtx2xyz = extend_trimesh(tri2vtx, vtx2xyz.astype(numpy.float64), 0.01, 10)
 
     with QtWidgets.QApplication([]) as app:
-        edge2vtx = TriMesh.edges(tri2vtx, vtx2xyz.shape[0])
+        edge2vtx = TriMesh.edge2vtx(tri2vtx, vtx2xyz.shape[0])
         drawer_trimesh = DrawerMesh.Drawer(
             vtx2xyz=vtx2xyz,
             list_elem2vtx=[

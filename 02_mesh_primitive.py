@@ -7,11 +7,11 @@ from del_msh import TriMesh
 
 
 def draw_mesh(tri2vtx, vtx2xyz):
-    edge2vtx = TriMesh.edges(tri2vtx=tri2vtx, num_vtx=vtx2xyz.shape[0])
+    edge2vtx = TriMesh.edge2vtx(tri2vtx=tri2vtx, num_vtx=vtx2xyz.shape[0])
 
     with QtWidgets.QApplication([]) as app:
         drawer = DrawerMesh.Drawer(
-            vtx2xyz=vtx2xyz.astype(numpy.float32),
+            vtx2xyz=vtx2xyz,
             list_elem2vtx=[
                 DrawerMesh.ElementInfo(index=tri2vtx, color=(1, 0, 0), mode=moderngl.TRIANGLES),
                 DrawerMesh.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES)]
