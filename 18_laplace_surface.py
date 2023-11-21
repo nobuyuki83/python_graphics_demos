@@ -29,7 +29,7 @@ def main():
 
     edge2vtx = TriMesh.edge2vtx(tri2vtx, vtx2xyz.shape[0])
     drawer_edge = DrawerMeshColorMap.Drawer(
-        vtx2xyz=vtx2xyz.astype(numpy.float32),
+        vtx2xyz=vtx2xyz,
         list_elem2vtx=[
             DrawerMeshColorMap.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
             DrawerMeshColorMap.ElementInfo(index=tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)

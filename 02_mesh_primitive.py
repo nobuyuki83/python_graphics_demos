@@ -1,6 +1,5 @@
 import moderngl
 from PyQt5 import QtWidgets
-import numpy
 
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from del_msh import TriMesh

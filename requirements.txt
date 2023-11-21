@@ -13,5 +13,5 @@ six==1.16.0
 style==1.1.0
 update==0.0.1
 util-moderngl-qt==0.1.19
-del-msh==0.1.14
+del-msh==0.1.16
 del-ls==0.1.0
