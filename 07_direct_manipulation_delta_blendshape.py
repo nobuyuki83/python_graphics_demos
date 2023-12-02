@@ -1,12 +1,11 @@
 from pathlib import Path
 import moderngl
 import numpy
-import blendshape_delta
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
-from del_msh import WavefrontObj, TriMesh, PolygonMesh
+from del_msh import WavefrontObj, TriMesh, PolygonMesh, BlendShape
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -94,7 +93,7 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
-        dweights = blendshape_delta.direct_manipulation(self.shape2pos, self.markers)
+        dweights = BlendShape.direct_manipulation_delta(self.shape2pos, self.markers)
         print(dweights)
         self.weights = numpy.append(1 - numpy.sum(dweights), dweights).astype(numpy.float32)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
@@ -119,7 +118,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if len < self.rad_sphere:
                 self.markers.pop(vtx)
         self.vtx_pick = -1
-        dweights = blendshape_delta.direct_manipulation(self.shape2pos, self.markers)
+        dweights = BlendShape.direct_manipulation_delta(self.shape2pos, self.markers)
         self.weights = numpy.append(1 - numpy.sum(dweights), dweights).astype(numpy.float32)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)

@@ -1,12 +1,11 @@
 from pathlib import Path
 import moderngl
 import numpy
-import blendshape_absolute
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
-from del_msh import WavefrontObj, PolygonMesh, TriMesh
+from del_msh import WavefrontObj, PolygonMesh, TriMesh, BlendShape
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -94,7 +93,7 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
-        self.weights = blendshape_absolute.direct_manipulation(self.shape2pos, self.markers)
+        self.weights = BlendShape.direct_manipulation_absolute(self.shape2pos, self.markers)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
@@ -116,7 +115,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         self.markers.pop(vtx_pick)
         self.vtx_pick = -1
-        self.weights = blendshape_absolute.direct_manipulation(self.shape2pos, self.markers)
+        self.weights = BlendShape.direct_manipulation_absolute(self.shape2pos, self.markers)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03

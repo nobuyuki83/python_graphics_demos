@@ -11,7 +11,7 @@ from del_msh import TriMesh
 
 
 def sample_mesh_uniform(tri2vtx, vtx2xyz):
-    tri2area = TriMesh.areas(tri2vtx, vtx2xyz)
+    tri2area = TriMesh.tri2area(tri2vtx, vtx2xyz)
     cumsum_area = numpy.cumsum(numpy.append(0., tri2area)).astype(numpy.float32)
 
     rad = 0.1

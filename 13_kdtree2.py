@@ -1,15 +1,14 @@
 from PyQt5 import QtWidgets
 from util_moderngl_qt import DrawerMeshUnindex, QGLWidgetViewer3
 import numpy
-from del_msh.del_msh import MyClass
-
+from del_msh import KdTree
 
 def main():
-    coord = numpy.random.rand(100, 2).astype(numpy.float32)
+    coord = numpy.random.rand(1000, 2).astype(numpy.float64)
     coord[:, :] *= 1.8
-    coord[:, :] -= 09.
-    kdtree2 = MyClass(coord)
-    edges = kdtree2.edges()
+    coord[:, :] -= 0.9
+    kdtree = KdTree.build_topology(coord)
+    edges = KdTree.build_edge(kdtree, coord)
     print(edges.shape)
 
     with QtWidgets.QApplication([]) as app:

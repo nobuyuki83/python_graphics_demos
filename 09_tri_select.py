@@ -28,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.cur_dist = -1
         self.tri2dist = numpy.zeros(self.tri2vtx.shape[0], dtype=numpy.uint64)
         self.tri2flag = numpy.zeros(self.tri2vtx.shape[0], dtype=numpy.int32)
-        self.tri2tri = TriMesh.triangle_adjacency(self.tri2vtx, self.vtx2xyz.shape[0])
+        self.tri2tri = TriMesh.tri2tri(self.tri2vtx, self.vtx2xyz.shape[0])
 
         super().__init__()
         self.resize(640, 480)
@@ -57,7 +57,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.tri2flag[tri_index] = 1
         self.cur_dist = -1
         self.update_visualization(True)
-        self.tri2dist = TriMesh.topological_distance_of_tris(tri_index, self.tri2tri)
+        self.tri2dist = TriMesh.tri2distance(tri_index, self.tri2tri)
 
     def mouse_move_callback(self, event: QtGui.QMouseEvent) -> None:
         if event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
