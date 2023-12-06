@@ -23,14 +23,17 @@
 
 ## [07_direct_manipulation_delta_blendshape.py](07_direct_manipulation_delta_blendshape.py)
 direct manipulation of delta blendshape
+
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/07_thumbnail.png" width=320>
 
 ## [08_direct_manipulation_absolute_blendshape.py](08_direct_manipulation_absolute_blendshape.py)
 direct manipulation of absolute blendshape
+
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/08_thumbnail.png" width=320>
 
 ## [09_tri_select.py](09_tri_select.py)
 user interface for selecting/unselecting triangles
+
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/09_thumbnail.png" width=320>
 
 ## [10_sampling_mesh.py](10_sampling_mesh.py)
