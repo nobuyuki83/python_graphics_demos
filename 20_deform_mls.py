@@ -3,12 +3,10 @@ import math
 import numpy
 import time
 import moderngl
-import pyrr
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTimer
 
-from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
-from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
+from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerSpheres
 from del_msh import TriMesh, DeformMLS
 
 
@@ -38,14 +36,10 @@ class MainWindow(QtWidgets.QMainWindow):
             ]
         )
 
-        sphere_tri2vtx, sphere_vtx2xyz = TriMesh.sphere()
-        self.drawer_sphere = DrawerMesh.Drawer(vtx2xyz=sphere_vtx2xyz, list_elem2vtx=[
-            DrawerMesh.ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
-        self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
+        self.drawer_sphere = DrawerSpheres.Drawer()
         for sample in self.samples_old:
-            scale = pyrr.Matrix44.from_scale((0.01, 0.01, 0.01))
-            translation = pyrr.Matrix44.from_translation(sample)
-            self.drawer_sphere.list_transform.append(translation * scale)
+            self.drawer_sphere.list_sphere.append(
+                DrawerSpheres.SphereInfo(pos=sample, color=(1.,0.,0.),rad=0.03))
 
         super().__init__()
         self.resize(640, 480)
@@ -67,9 +61,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #
         self.drawer_edge.update_position(self.vtx2xyz_new)
         for i_sample in range(self.samples_new.shape[0]):
-            scale = pyrr.Matrix44.from_scale((0.03, 0.03, 0.03))
-            translation = pyrr.Matrix44.from_translation(self.samples_new[i_sample])
-            self.drawer_sphere.list_transform[i_sample] = translation * scale
+            self.drawer_sphere.list_sphere[i_sample].pos = self.samples_new[i_sample]
         self.glwidget.update()
 
 

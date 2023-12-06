@@ -5,6 +5,7 @@ from PyQt5 import QtWidgets
 from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3
 from del_msh import TriMesh
 
+
 def main():
     path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
     tri2vtx, vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.0)

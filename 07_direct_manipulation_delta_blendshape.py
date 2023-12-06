@@ -3,7 +3,7 @@ import moderngl
 import numpy
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
-from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
+from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerSpheres
 from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
 from del_msh import WavefrontObj, TriMesh, PolygonMesh, BlendShape
 
@@ -22,12 +22,15 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         # sphere
+        self.drawer_sphere = DrawerSpheres.Drawer()
+        '''
         self.rad_sphere = 0.05
         sphere_tri2vtx, sphere_vtx2xyz = TriMesh.sphere()
         self.drawer_sphere = DrawerMesh.Drawer(sphere_vtx2xyz, list_elem2vtx=[
             DrawerMesh.ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
         self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
         self.drawer_sphere.is_visible = False
+        '''
 
         # add shapes
         self.shape2pos = numpy.array([obj.vtxxyz2xyz.flatten().copy()], dtype=numpy.float32)
@@ -73,11 +76,10 @@ class MainWindow(QtWidgets.QMainWindow):
         mvp = numpy.array(mvp).transpose()
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
-        self.drawer_sphere.list_transform = []
+        self.drawer_sphere.list_sphere = []
         for key_markers in self.markers.keys():
-            scale = Matrix44.from_scale((self.rad_sphere, self.rad_sphere, self.rad_sphere))
-            translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
-            self.drawer_sphere.list_transform.append(translate * scale)
+            self.drawer_sphere.list_sphere.append(
+                DrawerSpheres.SphereInfo(rad=0.03, pos=vtx2xyz[key_markers], color=(1., 0., 0)))
         print(self.markers)
         self.glwidget.updateGL()
 
@@ -98,11 +100,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.weights = numpy.append(1 - numpy.sum(dweights), dweights).astype(numpy.float32)
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
-        self.drawer_sphere.list_transform = []
+        self.drawer_sphere.list_sphere = []
         for key_markers in self.markers.keys():
-            scale = Matrix44.from_scale((self.rad_sphere, self.rad_sphere, self.rad_sphere))
-            translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
-            self.drawer_sphere.list_transform.append(translate * scale)
+            self.drawer_sphere.list_sphere.append(
+                DrawerSpheres.SphereInfo(rad=0.03, pos=vtx2xyz[key_markers], color=(1., 0., 0)))
         self.glwidget.updateGL()
 
     def mouse_doubleclick_callback(self, event):
@@ -114,8 +115,7 @@ class MainWindow(QtWidgets.QMainWindow):
             vtx2xyz.astype(numpy.float32), self.tri2vtx)
         for vtx in self.markers.copy():
             len = numpy.linalg.norm(vtx2xyz[vtx_pick] - vtx2xyz[vtx])
-            print(len, self.rad_sphere, vtx, vtx_pick)
-            if len < self.rad_sphere:
+            if len < 0.03:
                 self.markers.pop(vtx)
         self.vtx_pick = -1
         dweights = BlendShape.direct_manipulation_delta(self.shape2pos, self.markers)
@@ -123,11 +123,10 @@ class MainWindow(QtWidgets.QMainWindow):
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
-        self.drawer_sphere.list_transform = []
+        self.drawer_sphere.list_sphere = []
         for key_markers in self.markers.keys():
-            scale = Matrix44.from_scale((rad, rad, rad))
-            translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
-            self.drawer_sphere.list_transform.append(translate * scale)
+            self.drawer_sphere.list_sphere.append(
+                DrawerSpheres.SphereInfo(rad=0.03, pos=vtx2xyz[key_markers], color=(1., 0., 0)))
         self.glwidget.updateGL()
 
 

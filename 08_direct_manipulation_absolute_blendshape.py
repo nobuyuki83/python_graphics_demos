@@ -3,8 +3,8 @@ import moderngl
 import numpy
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
-from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
-from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
+from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerSpheres
+# from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
 from del_msh import WavefrontObj, PolygonMesh, TriMesh, BlendShape
 
 
@@ -23,11 +23,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         # sphere
-        sphere_tri2vtx, sphere_vtx2xyz = TriMesh.sphere(1., 32, 32)
-        self.drawer_sphere = DrawerMesh.Drawer(sphere_vtx2xyz, list_elem2vtx=[
-            DrawerMesh.ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
-        self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
-        self.drawer_sphere.is_visible = False
+        self.drawer_sphere = DrawerSpheres.Drawer()
 
         # add shapes
         self.shape2pos = numpy.array([obj.vtxxyz2xyz.flatten().copy()], dtype=numpy.float32)
@@ -73,11 +69,10 @@ class MainWindow(QtWidgets.QMainWindow):
         trg = (self.glwidget.nav.cursor_x, self.glwidget.nav.cursor_y)
         self.markers[self.vtx_pick] = [mvp, trg]
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
-        self.drawer_sphere.list_transform = []
+        self.drawer_sphere.list_sphere = []
         for key_markers in self.markers.keys():
-            scale = Matrix44.from_scale((rad, rad, rad))
-            translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
-            self.drawer_sphere.list_transform.append(translate * scale)
+            self.drawer_sphere.list_sphere.append(
+                DrawerSpheres.SphereInfo(rad=0.03, pos=vtx2xyz[key_markers], color=(1., 0., 0)))
         print(self.markers)
         self.glwidget.updateGL()
 
@@ -97,11 +92,10 @@ class MainWindow(QtWidgets.QMainWindow):
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
-        self.drawer_sphere.list_transform = []
+        self.drawer_sphere.list_sphere = []
         for key_markers in self.markers.keys():
-            scale = Matrix44.from_scale((rad, rad, rad))
-            translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
-            self.drawer_sphere.list_transform.append(translate * scale)
+            self.drawer_sphere.list_sphere.append(
+                DrawerSpheres.SphereInfo(rad=0.03, pos=vtx2xyz[key_markers], color=(1., 0., 0)))
         self.glwidget.updateGL()
 
     def mouse_doubleclick_callback(self, event):
@@ -119,11 +113,10 @@ class MainWindow(QtWidgets.QMainWindow):
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3).copy()
         self.drawer_mesh.update_position(vtx2xyz)
         rad = self.glwidget.nav.view_height / self.glwidget.nav.scale * 0.03
-        self.drawer_sphere.list_transform = []
+        self.drawer_sphere.list_sphere = []
         for key_markers in self.markers.keys():
-            scale = Matrix44.from_scale((rad, rad, rad))
-            translate = Matrix44.from_translation(vtx2xyz[key_markers].copy())
-            self.drawer_sphere.list_transform.append(translate * scale)
+            self.drawer_sphere.list_sphere.append(
+                DrawerSpheres.SphereInfo(rad=0.03, pos=vtx2xyz[key_markers], color=(1., 0., 0)))
         self.glwidget.updateGL()
 
 

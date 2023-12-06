@@ -21,6 +21,12 @@ def draw_mesh(tri2vtx, vtx2xyz):
 
 
 if __name__ == "__main__":
+    '''
+    from util_moderngl_qt import primitive_shapes
+    draw_mesh(*primitive_shapes.sphere(radius=1.0, n_longtitude=8, n_latitude=16))
+    draw_mesh(*primitive_shapes.cylinder(radius=1.0))
+    '''
+    #
     draw_mesh(*TriMesh.hemisphere(radius=1.0, ndiv_longtitude=8))
     draw_mesh(*TriMesh.torus(major_radius=0.4, minor_radius=0.2))
     draw_mesh(*TriMesh.capsule(radius=0.1, height=1.2, ndiv_longtitude=8))

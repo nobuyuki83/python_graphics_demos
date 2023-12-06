@@ -1,11 +1,9 @@
 import pathlib
-
-import del_msh.BVH
 import moderngl
 from PyQt5 import QtWidgets
 
 from util_moderngl_qt import DrawerMesh, DrawerMeshUnindex, QGLWidgetViewer3
-from del_msh import TriMesh
+from del_msh import BVH, TriMesh
 
 
 def main():
@@ -22,7 +20,7 @@ def main():
         ]
     )
     #
-    aabb_edges = del_msh.BVH.edges_of_aabb(aabb)
+    aabb_edges = BVH.edges_of_aabb(aabb)
     drawer_aabb = DrawerMeshUnindex.Drawer(elem2node2xyz=aabb_edges)
     #
     with QtWidgets.QApplication([]) as app:

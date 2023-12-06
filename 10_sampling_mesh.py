@@ -5,8 +5,7 @@ import moderngl
 import pyrr
 from PyQt5 import QtWidgets
 
-from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
-from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
+from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerSpheres
 from del_msh import TriMesh
 
 
@@ -52,12 +51,12 @@ class MainWindow(QtWidgets.QMainWindow):
         sphere_tri2vtx, shere_vtx2xyz = TriMesh.sphere()
         self.drawer_sphere = DrawerMesh.Drawer(vtx2xyz=shere_vtx2xyz, list_elem2vtx=[
             DrawerMesh.ElementInfo(index=sphere_tri2vtx, color=(1., 0., 0.), mode=moderngl.TRIANGLES)])
-        self.drawer_sphere = DrawerTransformMulti(self.drawer_sphere)
+        self.drawer_sphere = DrawerSpheres.Drawer()
         for sample in samples:
             pos_i = TriMesh.position(self.tri2vtx, self.vtx2xyz, *sample)
-            scale = pyrr.Matrix44.from_scale((0.01, 0.01, 0.01))
-            translation = pyrr.Matrix44.from_translation(pos_i)
-            self.drawer_sphere.list_transform.append(translation * scale)
+            self.drawer_sphere.list_sphere.append(
+                DrawerSpheres.SphereInfo(pos=pos_i, color=(1.,0., 0.), rad=0.01)
+            )
 
         super().__init__()
         self.resize(640, 480)
