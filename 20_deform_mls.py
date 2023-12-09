@@ -39,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.drawer_sphere = DrawerSpheres.Drawer()
         for sample in self.samples_old:
             self.drawer_sphere.list_sphere.append(
-                DrawerSpheres.SphereInfo(pos=sample, color=(1.,0.,0.),rad=0.03))
+                DrawerSpheres.SphereInfo(pos=sample, color=(1., 0., 0.), rad=0.03))
 
         super().__init__()
         self.resize(640, 480)

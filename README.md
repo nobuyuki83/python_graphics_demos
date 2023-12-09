@@ -74,3 +74,7 @@ user interface for selecting/unselecting triangles
 
 ## [22_bvh_self_intersection.py](22_bvh_self_intersection.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/22_thumbnail.png" width=320>
+
+## [23_laplacian_deformation.py](23_laplacian_deformation.py)
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/23_thumbnail.png" width=320>
+
