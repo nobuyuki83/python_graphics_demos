@@ -10,8 +10,8 @@ if __name__ == "__main__":
     newpath = Path('.') / 'asset' / 'Babi' / 'Babi.obj'
 
     obj = WavefrontObj.load(str(newpath), is_centerize=True, normalized_size=1.8)
-    edge2vtx = obj.edges()
-    tri2vtx = obj.tris()
+    edge2vtx = obj.edge2vtxxyz()
+    tri2vtx = obj.tri2vtxxyz()
 
     with QtWidgets.QApplication([]) as app:
         drawer = DrawerMesh.Drawer(

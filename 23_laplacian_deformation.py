@@ -1,10 +1,11 @@
 import math
+#
 import numpy
 import moderngl
 import pyrr
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTimer
-
+#
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from del_msh import TriMesh
 import del_ls
@@ -25,7 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.vtx2xyz_def = self.vtx2xyz_ini.copy()
         #
         vtx2idx, idx2vtx = TriMesh.vtx2vtx(tri2vtx, self.vtx2xyz_ini.shape[0])
-        print(vtx2idx, idx2vtx)
+        # print(vtx2idx, idx2vtx)
         self.sparse = del_ls.SparseSquareMatrix(vtx2idx, idx2vtx)
         self.sparse.set_zero()
         TriMesh.merge_hessian_mesh_laplacian(

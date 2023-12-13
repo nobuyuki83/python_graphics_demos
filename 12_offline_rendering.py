@@ -1,9 +1,11 @@
-import numpy
 import pathlib
+#
+import numpy
 import pyrr
-from util_moderngl_qt import DrawerMesh
 import moderngl
 from PIL import Image
+#
+from util_moderngl_qt import DrawerMesh
 from del_msh import TriMesh
 
 

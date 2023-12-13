@@ -1,4 +1,15 @@
+# Python graphics demos 
 
+
+## How to run the demo 
+
+
+```shell
+python -m venv venv
+source venv/bin/activate
+pip install -r requrements.txt
+python **_*****.py 
+```
 
 ## [00_qt5_window_test.py](00_qt5_window_test.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/00_thumbnail.png" width=320>
@@ -77,4 +88,7 @@ user interface for selecting/unselecting triangles
 
 ## [23_laplacian_deformation.py](23_laplacian_deformation.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/23_thumbnail.png" width=320>
+
+## [24_deform_mls_ui.py](24_deform_mls_ui.py)
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/24_thumbnail.png" width=320>
 

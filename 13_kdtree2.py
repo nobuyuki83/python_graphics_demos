@@ -1,7 +1,9 @@
-from PyQt5 import QtWidgets
-from util_moderngl_qt import DrawerMeshUnindex, QGLWidgetViewer3
 import numpy
+from PyQt5 import QtWidgets
+#
+from util_moderngl_qt import DrawerMeshUnindex, QGLWidgetViewer3
 from del_msh import KdTree
+
 
 def main():
     coord = numpy.random.rand(1000, 2).astype(numpy.float64)

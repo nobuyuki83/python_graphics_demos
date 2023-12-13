@@ -1,8 +1,8 @@
-import numpy
 import pathlib
 import random
+#
+import numpy
 import moderngl
-import pyrr
 from PyQt5 import QtWidgets
 
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerSpheres

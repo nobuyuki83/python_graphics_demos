@@ -21,8 +21,11 @@ class MainWindow(QtWidgets.QMainWindow):
             (-0.3, -0.3, -0.3),
             (+0.3, -0.3, -0.3),
             (-0.3, +0.3, -0.3),
+            (+0.3, +0.3, -0.3),
             (-0.3, -0.3, +0.3),
-            (-0.3, +0.3, +0.3)], dtype=numpy.float32)
+            (+0.3, -0.3, +0.3),
+            (-0.3, +0.3, +0.3),
+            (+0.3, +0.3, +0.3)], dtype=numpy.float32)
         self.weights = DeformMLS.kernel(self.samples_old, self.vtx2xyz)
         self.mls_data = DeformMLS.precomp(self.samples_old, self.vtx2xyz, self.weights)
         self.samples_new = self.samples_old.copy()

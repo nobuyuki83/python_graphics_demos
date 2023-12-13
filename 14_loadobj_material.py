@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     with QtWidgets.QApplication([]) as app:
         list_elem2vtx = []
-        list_elem2vtx.append(DrawerMesh.ElementInfo(index=obj.edges(), color=(0., 0., 0.), mode=moderngl.LINES))
+        list_elem2vtx.append(DrawerMesh.ElementInfo(index=obj.edge2vtxxyz(), color=(0., 0., 0.), mode=moderngl.LINES))
         for mtl_idx, mtl_name in enumerate(obj.mtl2name):
             pelem2pidx, pidx2vtxxyz = obj.extract_polygon_mesh_of_material(mtl_idx)
             if len(pelem2pidx) == 1:
