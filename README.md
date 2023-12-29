@@ -92,3 +92,13 @@ user interface for selecting/unselecting triangles
 ## [24_deform_mls_ui.py](24_deform_mls_ui.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/24_thumbnail.png" width=320>
 
+## [25_bvh_ccd.py](25_bvh_ccd.py)
+Continuous collision detection
+
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/25_thumbnail.png" width=320>
+
+## [26_bvh_proximity.py](26_bvh_proximity.py)
+Detect near face-vertex and edge-edge pairs
+
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/26_thumbnail.png" width=320>
+

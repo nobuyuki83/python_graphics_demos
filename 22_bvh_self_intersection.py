@@ -12,8 +12,9 @@ def main():
     tri2vtx, vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.)
     vtx2xyz1 = vtx2xyz + numpy.array([0.2, 0.2, 0.2], dtype=numpy.float32)
     tri2vtx, vtx2xyz = TriMesh.merge(tri2vtx, vtx2xyz, tri2vtx, vtx2xyz1)
-    bvh, aabb = TriMesh.bvh_aabb(tri2vtx, vtx2xyz)
-    edge2node2xyz, edge2tri = BVH.self_intersection_trimesh3(tri2vtx, vtx2xyz, bvh, aabb)
+    bvhnodes = TriMesh.bvhnodes_tri(tri2vtx, vtx2xyz)
+    aabbs = TriMesh.aabbs_tri(tri2vtx, vtx2xyz, bvhnodes)
+    edge2node2xyz, edge2tri = TriMesh.self_intersection(tri2vtx, vtx2xyz, bvhnodes, aabbs)
     # print(edge2node2xyz, edge2tri)
     #
     edge2vtx = TriMesh.edge2vtx(tri2vtx, vtx2xyz.shape[0])

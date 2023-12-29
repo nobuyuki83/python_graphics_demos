@@ -57,9 +57,9 @@ class MainWindow(QtWidgets.QMainWindow):
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3)  # current shape
         src, direction = self.glwidget.nav.picking_ray()
         self.vtx_pick = TriMesh.pick_vertex(
+            self.tri2vtx, vtx2xyz.astype(numpy.float32),
             numpy.array(src.xyz).astype(numpy.float32),
-            numpy.array(direction.xyz).astype(numpy.float32),
-            vtx2xyz.astype(numpy.float32), self.tri2vtx)
+            numpy.array(direction.xyz).astype(numpy.float32))
         print(self.vtx_pick)
         if self.vtx_pick == -1:
             return

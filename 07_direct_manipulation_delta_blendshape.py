@@ -4,7 +4,6 @@ import numpy
 from PyQt5 import QtWidgets, QtCore
 from pyrr import Matrix44
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerSpheres
-from util_moderngl_qt.drawer_transform_multi import DrawerTransformMulti
 from del_msh import WavefrontObj, TriMesh, PolygonMesh, BlendShape
 
 
@@ -66,9 +65,9 @@ class MainWindow(QtWidgets.QMainWindow):
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3)  # current shape
         src, direction = self.glwidget.nav.picking_ray()
         self.vtx_pick = TriMesh.pick_vertex(
+            self.tri2vtx, vtx2xyz.astype(numpy.float32),
             numpy.array(src.xyz).astype(numpy.float32),
-            numpy.array(direction.xyz).astype(numpy.float32),
-            vtx2xyz.astype(numpy.float32), self.tri2vtx)
+            numpy.array(direction.xyz).astype(numpy.float32))
         if self.vtx_pick == -1:
             return
         assert self.vtx_pick < self.tri2vtx.shape[0]
@@ -110,9 +109,9 @@ class MainWindow(QtWidgets.QMainWindow):
         vtx2xyz = self.weights.transpose().dot(self.shape2pos).reshape(-1, 3)  # current shape
         src, direction = self.glwidget.nav.picking_ray()
         vtx_pick = TriMesh.pick_vertex(
+            self.tri2vtx, vtx2xyz.astype(numpy.float32),
             numpy.array(src.xyz).astype(numpy.float32),
-            numpy.array(direction.xyz).astype(numpy.float32),
-            vtx2xyz.astype(numpy.float32), self.tri2vtx)
+            numpy.array(direction.xyz).astype(numpy.float32))
         for vtx in self.markers.copy():
             len = numpy.linalg.norm(vtx2xyz[vtx_pick] - vtx2xyz[vtx])
             if len < 0.03:
