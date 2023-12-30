@@ -1,4 +1,5 @@
 import pathlib
+import os
 #
 import numpy
 import pyrr
@@ -11,7 +12,7 @@ from del_msh import TriMesh
 
 def main():
     path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
-    tri2vtx, vtx2xyz = TriMesh.load_wavefront_obj(str(path_file))
+    tri2vtx, vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.8)
     edge2vtx = TriMesh.edge2vtx(tri2vtx, vtx2xyz.shape[0])
 
     drawer = DrawerMesh.Drawer(
@@ -30,16 +31,17 @@ def main():
     fbo.use()
     fbo.clear(0.0, 0.0, 1.0, 1.0)
     mvp = pyrr.Matrix44.identity(dtype='f4')
-    mvp[0][0] = 0.03
-    mvp[1][1] = 0.03
-    mvp[2][2] = 0.03
     drawer.paint_gl(mvp=mvp)
     # numpy.ndarray( [fbo.size[0], fbo.size[1], 3], dtype=numpy.float32)
     # print(depth)
-    img = Image.frombytes('RGB', fbo.size, fbo.read(), 'raw', 'RGB', 0, -1)
+    os.makedirs("output", exist_ok=True)
+    img = Image.frombytes('RGB', fbo.size, fbo.read(), 'raw', 'RGB')
     img.save("output/rgb.png")
-
-    depth = numpy.frombuffer(fbo.read(attachment=-1, dtype='f4'), dtype=numpy.float32).reshape(fbo.size)
+    #
+    depth = numpy.frombuffer(fbo.read(attachment=-1, dtype='f4'), dtype=numpy.float32)
+    print(depth.shape, fbo.size, depth.shape[0]/(fbo.size[0]*fbo.size[1]))
+    depth = depth.reshape((3,fbo.size[0],fbo.size[1]))
+    depth = depth.transpose(1,2,0)[:,:,0].copy()
     depth = (depth * 255.0).astype(numpy.uint8)
     depth = Image.fromarray(depth)
     depth.save("output/depth.png")

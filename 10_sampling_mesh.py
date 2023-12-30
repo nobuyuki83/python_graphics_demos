@@ -4,7 +4,7 @@ import random
 import numpy
 import moderngl
 from PyQt5 import QtWidgets
-
+#
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3, DrawerSpheres
 from del_msh import TriMesh
 
