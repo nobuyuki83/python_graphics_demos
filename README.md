@@ -105,3 +105,6 @@ Detect near face-vertex and edge-edge pairs
 ## [27_depth_projection.py](27_depth_projection.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/27_thumbnail.png" width=320>
 
+## [28_dual_window.py](28_dual_window.py)
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/28_thumbnail.png" height=250>
+
