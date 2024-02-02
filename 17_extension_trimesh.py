@@ -4,12 +4,12 @@ import numpy
 from PyQt5 import QtWidgets
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from del_msh import TriMesh
-from del_msh.del_msh import extend_trimesh
+from del_msh.del_msh import extend_trimesh3
 
 if __name__ == "__main__":
     path_file = pathlib.Path('.') / 'asset' / 'bunny_1k.obj'
     tri2vtx, vtx2xyz = TriMesh.load_wavefront_obj(str(path_file), is_centerize=True, normalized_size=1.0)
-    vtx2xyz = extend_trimesh(tri2vtx, vtx2xyz.astype(numpy.float64), 0.01, 10)
+    vtx2xyz = extend_trimesh3(tri2vtx, vtx2xyz.astype(numpy.float64), 0.01, 10)
 
     with QtWidgets.QApplication([]) as app:
         edge2vtx = TriMesh.edge2vtx(tri2vtx, vtx2xyz.shape[0])

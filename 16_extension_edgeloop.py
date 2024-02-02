@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets
 import numpy
 #
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
-from del_msh.del_msh import extend_polyedge
+from del_msh.del_msh import extend_polyloop3
 from del_msh import TriMesh
 
 if __name__ == "__main__":
@@ -27,7 +27,7 @@ if __name__ == "__main__":
         lpvtx2xyz[i, 1] = rad1 * math.sin(theta)
         lpvtx2xyz[i, 2] = z
 
-    tri2vtx, vtx2xyz = extend_polyedge(lpvtx2xyz, 0.02, 10)
+    tri2vtx, vtx2xyz = extend_polyloop3(lpvtx2xyz, 0.02, 10)
 
     with QtWidgets.QApplication([]) as app:
         '''

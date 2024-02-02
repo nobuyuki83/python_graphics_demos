@@ -24,3 +24,9 @@ if __name__ == "__main__":
     ax.scatter(xys[:, 0], xys[:, 1])
     ax.add_patch(matplotlib.patches.Polygon(xy=vtx2xy_in, closed=True, fill=False))
     plt.show()
+    ##
+    tri2vtx, vtx2xy = PolyLoop.tesselation2d(vtx2xy_in,0.1)
+    _, ax = plt.subplots()
+    ax.set_aspect('equal')
+    ax.triplot(vtx2xy[:, 0], vtx2xy[:, 1], tri2vtx)
+    plt.show()

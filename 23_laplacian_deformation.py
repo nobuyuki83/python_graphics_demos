@@ -48,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         super().__init__()
         self.resize(640, 480)
-        self.setWindowTitle('Mesh Viewer')
+        self.setWindowTitle('Linear Laplacian')
         self.glwidget = QGLWidgetViewer3.QtGLWidget_Viewer3(
             [self.drawer_edge])
         self.setCentralWidget(self.glwidget)
