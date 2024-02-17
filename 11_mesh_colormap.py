@@ -2,7 +2,7 @@ import numpy
 import pathlib
 import moderngl
 from PyQt5 import QtWidgets
-from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3
+from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3, Colormap
 from del_msh import TriMesh
 
 
@@ -19,13 +19,7 @@ def main():
             DrawerMeshColorMap.ElementInfo(index=tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)
         ],
         vtx2val=vtx2val,
-        color_map=numpy.array([
-            [0.0, 0.0, 0.0],
-            [0.5, 0.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [1.0, 0.5, 0.0],
-            [1.0, 1.0, 0.0],
-            [1.0, 1.0, 1.0]])
+        color_map=Colormap.heat()
     )
     with QtWidgets.QApplication([]) as app:
         win = QGLWidgetViewer3.QtGLWidget_Viewer3(

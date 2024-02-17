@@ -1,9 +1,10 @@
 import numpy
 import moderngl
 from PyQt5 import QtWidgets
-from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3
+from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3, Colormap
 from del_msh import TriMesh
 import del_ls
+import del_fem
 
 
 def main():
@@ -11,7 +12,8 @@ def main():
     vtx2idx, idx2vtx = TriMesh.vtx2vtx(tri2vtx, vtx2xyz.shape[0])
     sparse = del_ls.SparseSquareMatrix(vtx2idx, idx2vtx)
     sparse.set_zero()
-    TriMesh.merge_hessian_mesh_laplacian(
+    from del_fem.del_fem import merge_hessian_mesh_laplacian_on_trimesh3
+    merge_hessian_mesh_laplacian_on_trimesh3(
         tri2vtx, vtx2xyz,
         sparse.row2idx, sparse.idx2col, sparse.row2val, sparse.idx2val)
     r_vec = numpy.zeros((vtx2xyz.shape[0]), dtype=numpy.float64)
@@ -35,13 +37,7 @@ def main():
             DrawerMeshColorMap.ElementInfo(index=tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)
         ],
         vtx2val=vtx2val,
-        color_map=numpy.array([
-            [0.0, 0.0, 0.0],
-            [0.5, 0.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [1.0, 0.5, 0.0],
-            [1.0, 1.0, 0.0],
-            [1.0, 1.0, 1.0]])
+        color_map=Colormap.heat()
     )
 
     with QtWidgets.QApplication([]) as app:

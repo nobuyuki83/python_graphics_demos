@@ -108,5 +108,11 @@ Detect near face-vertex and edge-edge pairs
 ## [28_dual_window.py](28_dual_window.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/28_thumbnail.png" height=250>
 
-## [29_arap_deformation.py](29_mesh_deformation.py)
+## [29_arap_deformation.py](29_arap_deformation.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/29_thumbnail.png" height=250>
+
+## [30_laplace2_eign.py](30_laplace2_eigen.py)
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/30_thumbnail.png" height=250>
+
+## [31_linear_solid_eigen.py](31_linear_solid_eigen.py)
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/31_thumbnail.png" height=250>
