@@ -9,7 +9,6 @@ from PyQt5.QtCore import QTimer
 from util_moderngl_qt import DrawerMesh, QGLWidgetViewer3
 from del_msh import TriMesh
 import del_ls
-import del_fem
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -32,7 +31,8 @@ class MainWindow(QtWidgets.QMainWindow):
         from del_fem.del_fem import merge_hessian_mesh_laplacian_on_trimesh3
         merge_hessian_mesh_laplacian_on_trimesh3(
             tri2vtx, self.vtx2xyz_ini,
-            self.sparse.row2idx, self.sparse.idx2col, self.sparse.row2val, self.sparse.idx2val)
+            self.sparse.row2idx, self.sparse.idx2col,
+            self.sparse.row2val, self.sparse.idx2val)
         self.r_vec = numpy.zeros_like(self.vtx2xyz_ini)
         self.penalty = 1.0e+3
         self.sparse.row2val[self.vtxs0] += self.penalty

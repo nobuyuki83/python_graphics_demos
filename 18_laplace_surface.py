@@ -1,10 +1,9 @@
 import numpy
 import moderngl
 from PyQt5 import QtWidgets
-from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3, Colormap
+from util_moderngl_qt import DrawerMeshColormap, QGLWidgetViewer3, Colormap
 from del_msh import TriMesh
 import del_ls
-import del_fem
 
 
 def main():
@@ -15,29 +14,30 @@ def main():
     from del_fem.del_fem import merge_hessian_mesh_laplacian_on_trimesh3
     merge_hessian_mesh_laplacian_on_trimesh3(
         tri2vtx, vtx2xyz,
-        sparse.row2idx, sparse.idx2col, sparse.row2val, sparse.idx2val)
+        sparse.row2idx, sparse.idx2col,
+        sparse.row2val, sparse.idx2val)
     r_vec = numpy.zeros((vtx2xyz.shape[0]), dtype=numpy.float64)
     penalty = 1.0e+3
     for iv in range(vtx2xyz.shape[0]):
         y = vtx2xyz[iv][1]
         if y < -0.89:
-            r_vec[iv] = penalty * 0.
+            r_vec[iv] = penalty * -0.3
             sparse.row2val[iv] += penalty
         if y > +0.89:
-            r_vec[iv] = penalty * 1.
+            r_vec[iv] = penalty * 1.3
             sparse.row2val[iv] += penalty
     vtx2val, conv_hist = sparse.solve_cg(r_vec)
     print("cg_iterations =", len(conv_hist))
 
     edge2vtx = TriMesh.edge2vtx(tri2vtx, vtx2xyz.shape[0])
-    drawer_edge = DrawerMeshColorMap.Drawer(
+    drawer_edge = DrawerMeshColormap.Drawer(
         vtx2xyz=vtx2xyz,
         list_elem2vtx=[
-            DrawerMeshColorMap.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
-            DrawerMeshColorMap.ElementInfo(index=tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)
+            DrawerMeshColormap.ElementInfo(index=edge2vtx, color=(0, 0, 0), mode=moderngl.LINES),
+            DrawerMeshColormap.ElementInfo(index=tri2vtx, color=(1, 1, 1), mode=moderngl.TRIANGLES)
         ],
         vtx2val=vtx2val,
-        color_map=Colormap.heat()
+        color_map=Colormap.jet()
     )
 
     with QtWidgets.QApplication([]) as app:

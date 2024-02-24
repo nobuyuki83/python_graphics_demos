@@ -25,9 +25,10 @@ if __name__ == "__main__":
     ax.add_patch(matplotlib.patches.Polygon(xy=vtx2xy_in, closed=True, fill=False))
     plt.show()
     ##
-    tri2vtx, vtx2xy = PolyLoop.tesselation2d(vtx2xy_in,
-                                             resolution_edge=0.05,
-                                             resolution_face=0.1)
+    tri2vtx, vtx2xy = PolyLoop.tesselation2d(
+        vtx2xy_in,
+        resolution_edge=0.08,
+        resolution_face=0.08)
     _, ax = plt.subplots()
     ax.set_aspect('equal')
     ax.triplot(vtx2xy[:, 0], vtx2xy[:, 1], tri2vtx)

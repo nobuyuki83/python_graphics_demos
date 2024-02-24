@@ -116,3 +116,6 @@ Detect near face-vertex and edge-edge pairs
 
 ## [31_linear_solid_eigen.py](31_linear_solid_eigen.py)
 <img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/31_thumbnail.png" height=250>
+
+## [32_mitc3_eigen.py](32_mitc3_eigen.py)
+<img src="https://raw.githubusercontent.com/nobuyuki83/demos_py_qt_mdngl/doc/32_thumbnail.png" height=250>

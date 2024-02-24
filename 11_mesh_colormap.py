@@ -2,7 +2,7 @@ import numpy
 import pathlib
 import moderngl
 from PyQt5 import QtWidgets
-from util_moderngl_qt import DrawerMeshColorMap, QGLWidgetViewer3, Colormap
+from util_moderngl_qt import DrawerMeshColormap, QGLWidgetViewer3, Colormap
 from del_msh import TriMesh
 
 

@@ -9,5 +9,5 @@ PyQt5-Qt5==5.15.11
 PyQt5-sip==12.13.0
 pyrr==0.10.3
 util-moderngl-qt==0.1.21
-del-msh==0.1.20
-del-fem==0.1.0
+del-msh==0.1.21
+del-fem==0.1.1
