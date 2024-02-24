@@ -76,3 +76,4 @@ Cargo.lock
 .github
 
 output/
+private/
